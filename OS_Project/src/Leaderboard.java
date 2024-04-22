@@ -29,9 +29,12 @@ public class Leaderboard {
 	
 	public void putPlayer(Player player) {
 		
-		// if the player is not already there then add it, otherwise do not add it
-		if (leaderboard.stream().noneMatch(p -> p.getTicket() == player.getTicket()))
-			leaderboard.add(player);
+		// if the player is already there, then remove it and then add it
+		if (leaderboard.stream().anyMatch(p -> p.getTicket() == player.getTicket()))
+			leaderboard.removeIf(p -> p.getTicket() == player.getTicket());
+
+		leaderboard.add(player);
+		
 	}
 	
 
