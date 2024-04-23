@@ -1,11 +1,20 @@
 import java.net.*;
+import java.util.Scanner;
 import java.io.*;
 
 public class Client {
 	public static void main(String args[]) {
 		try {
 			// Get a Socket to the daytime service,
-			Socket daytime = new Socket("localhost", 1300);
+			System.out.print("Enter IP address: ");
+			Scanner input = new Scanner(System.in);
+			String IP = input.next(); 
+			
+			System.out.print("Enter Port No: ");
+			Scanner input2 = new Scanner(System.in);
+			int port = input2.nextInt();
+			
+			Socket daytime = new Socket(IP, port);
 			System.out.println("Connected with server " +
 					daytime.getInetAddress() + ":" +
 					daytime.getPort());
