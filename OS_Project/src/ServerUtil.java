@@ -7,8 +7,8 @@ public class ServerUtil {
 		String command = clientMsgArr[0];
 		
 		switch(command) {
-			case "pseudo": return parsePseudo(clientMsgArr);
-			case "join"  : return parseJoin();break;
+			case "pseudo": return parsePseudo(clientMsgArr); break;
+			case "join"  : return parseJoin(); break;
 			case "ready" : ;break;
 			case "guess" : ;break;
 			case "chat"  : parseChat();break;
