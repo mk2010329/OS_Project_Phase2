@@ -50,26 +50,34 @@ public class Game implements Runnable {
 		return sum/listOfCurrentGuesses.size();
 	}
 	
-	public void pickPlayer() {
+	public void decideWinner() {
 		
 		double target = (2.0 / 3.0) * getAverage();
         double minDifference = Double.MAX_VALUE;
         ArrayList<Player> winners = new ArrayList<>();
-
         for (Player player : listOfCurrentPlayers) {
             double difference = Math.abs(target - player.getGuess());
             if (difference < minDifference) {
                 minDifference = difference;
                 winners.clear();
                 winners.add(player);
+                listOfCurrentPlayers.remove(player);
             } else if (difference == minDifference) {
                 winners.add(player);
+                listOfCurrentPlayers.remove(player);
             }
         }
-       for (Player winner: winners) {
-    	   
-       }
-		
+        decrementPoint(listOfCurrentPlayers);
+        for (Player p : winners) {
+        	p.setNumberOfWins(p.getNumberOfWins()+1);
+        	listOfCurrentPlayers.add(p);
+        }
+	}
+	
+	public void decrementPoint(ArrayList<Player> player) {
+		for(Player p : player) {
+			p.setGamePoints(p.getGamePoints()-1);
+		}
 	}
 
 }
