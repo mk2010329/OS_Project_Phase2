@@ -5,6 +5,7 @@ public class Player {
 	private int numberOfWins;
 	private String ticket;
 	private int gamePoints;
+	private int guess;
 	
 	public Player(String nickname, int numberOfWins, String ticket, int gamePoints) {
 		
@@ -44,6 +45,15 @@ public class Player {
 
 	public void setGamePoints(int gamePoints) {
 		this.gamePoints = gamePoints;
+	}
+	
+
+	public int getGuess() {
+		return guess;
+	}
+
+	public void setGuess(int guess) {
+		this.guess = guess;
 	}
 
 	@Override
