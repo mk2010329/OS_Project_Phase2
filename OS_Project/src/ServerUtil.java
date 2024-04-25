@@ -1,27 +1,29 @@
-public class ServerUtil {
-	static int uniqueId = 0;
+import database.DatabaseUtil;
 
-//	private static getUniqueId() {
-//		
-//	}
+public class ServerUtil {
 	
-	public String parse(String clientMsg) {
+	public String parseClient(String clientMsg) {
 		String [] clientMsgArr = clientMsg.split(" ");
 		String command = clientMsgArr[0];
 		
 		switch(command) {
-			case "pseudo": ;break;
-			case "join"  : ;break;
+			case "pseudo": return parsePseudo(clientMsgArr);
+			case "join"  : return parseJoin();break;
 			case "ready" : ;break;
 			case "guess" : ;break;
-			default: ;
+			case "chat"  : parseChat();break;
+			default: ; 
 		}
 		return "Khusra";
 	}
-	private void parsePseudo() {
+	
+	//parseClient methods
+	private String parsePseudo(String [] clientMsgArr) {
+		Player plr = DatabaseUtil.searchTicket(clientMsgArr[1]);
 		
+		return plr.getTicket()+"\nWelcome"+plr.getNickname();
 	}
-	private void parseJoin() {
+	private String parseJoin() {
 		
 	}
 	private void parseReady() {
@@ -30,6 +32,14 @@ public class ServerUtil {
 	private void parseGuess() {
 	
 	}
+	
+	private void parseChat() {
+		
+	}
+	
+	
+	
+	
 	public String getLeaderBoard() {
 		return null;
 		
