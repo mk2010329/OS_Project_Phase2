@@ -40,13 +40,15 @@ public class Server {
 					// reading ticket/name from client
 					BufferedReader fromClient = 
 							new BufferedReader(new InputStreamReader(nextClient.getInputStream()));
-					//System.out.println(fromClient.readLine());
+				
 					String ticket ="sane1";
+					Player player = new Player(fromClient.readLine(), 0, ticket, 0);
+					Game game = new Game();
+					game.listOfCurrentPlayers.add(player);
 					output.println("Welcome "+fromClient.readLine()+", Your Ticket is "+ticket);
-					// Close connection
-					//	nextClient.close();
-					Game game = new Game(nextClient);
-					game.run();
+				
+				//	Game game = new Game(nextClient);
+					//game.run();
 					
 				} catch (IOException e) {
 					e.printStackTrace();

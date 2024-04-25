@@ -11,7 +11,7 @@ import java.util.Random;
 public class Game implements Runnable {
 	
 	public  ArrayList<Integer> listOfCurrentGuesses = new ArrayList<>();
-	private ArrayList<Player> listOfCurrentPlayers = new ArrayList<>();
+	public ArrayList<Player> listOfCurrentPlayers = new ArrayList<>();
 	private String gameName;
 	
 	Socket nextClient;
@@ -21,6 +21,9 @@ public class Game implements Runnable {
 	long currentTime = System.currentTimeMillis();
 	long newTime, diff;
 	
+	public Game() {
+		//	super();
+		}
 	public Game(Socket nextClient) {
 	//	super();
 		this.nextClient = nextClient;
