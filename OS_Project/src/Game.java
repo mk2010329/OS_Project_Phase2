@@ -4,15 +4,15 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Optional;
+//import java.util.Date;
+//import java.util.Optional;
 import java.util.Random;
 
 public class Game implements Runnable {
 	
 	public  ArrayList<Integer> listOfCurrentGuesses = new ArrayList<>();
-	private ArrayList<Player> listOfCurrentPlayers = new ArrayList<>();
-	private String gameName;
+	public ArrayList<Player> listOfCurrentPlayers = new ArrayList<>();
+	private String gameId;
 	
 	Socket nextClient;
 	PrintWriter to_client;
@@ -20,7 +20,9 @@ public class Game implements Runnable {
 	int countTrials=0;
 	long currentTime = System.currentTimeMillis();
 	long newTime, diff;
-	
+	public Game() {
+		//	super();
+		}
 	public Game(Socket nextClient) {
 	//	super();
 		this.nextClient = nextClient;
@@ -114,6 +116,12 @@ public class Game implements Runnable {
 		for(Player p : player) {
 			p.setGamePoints(p.getGamePoints()-1);
 		}
+	}
+	public String getGameId() {
+		return gameId;
+	}
+	public void setGameId(String gameId) {
+		this.gameId = gameId;
 	}
 
 }
