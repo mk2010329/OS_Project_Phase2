@@ -1,33 +1,38 @@
+
 import java.net.*;
-import java.util.Scanner;
 import java.io.*;
 
 public class Client {
 	public static void main(String args[]) {
+		PrintWriter to_server;
+		BufferedReader from_server;
+		BufferedReader from_user;
+		
 		try {
 			// Get a Socket to the daytime service,
-			System.out.print("Enter IP address: ");
-			Scanner input = new Scanner(System.in);
-			String IP = input.next(); 
-			
-			System.out.print("Enter Port No: ");
-			Scanner input2 = new Scanner(System.in);
-			int port = input2.nextInt();
-			
-			Socket daytime = new Socket(IP, port);
+
+			Socket client = new Socket("localhost", 1300);
+			from_server = new BufferedReader(new InputStreamReader(client.getInputStream()));
+			from_user = new BufferedReader(new InputStreamReader(System.in));
+			to_server = new PrintWriter(client.getOutputStream(), true);
 			System.out.println("Connected with server " +
-					daytime.getInetAddress() + ":" +
-					daytime.getPort());
-			// Set the socket option just in case server stalls
-			daytime.setSoTimeout(2000);
-			// Read from the server
-			BufferedReader reader =
-					new BufferedReader(
-							new InputStreamReader(daytime.getInputStream()));
+					client.getInetAddress() + ":" +
+					client.getPort());
+			
+			while(true) {
+				String msg = from_server.readLine();
+				System.out.print(msg);
+				if(msg.equals("Done") || client == null) {
+					break;
+				}
+				String userInput= from_user.readLine();
+				to_server.println(userInput);
+				
+			}
 			// Display result on the screen
-			System.out.println("Result = " + reader.readLine());
+			//System.out.println("Result = " + reader.readLine());
 			// Close the connection
-			daytime.close();
+			//daytime.close();
 		} catch(IOException ioe) {
 			System.out.println("Error" + ioe);
 		}

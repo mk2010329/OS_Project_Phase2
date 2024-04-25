@@ -4,7 +4,7 @@ import java.net.*;
 import java.io.*;
 import java.util.*;
 
-public class QuickSumServer {
+public class Server {
 	public static void main(String args[]) {
 		try {
 			// Bind to service port, so clients access to daytime service
