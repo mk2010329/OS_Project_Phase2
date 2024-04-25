@@ -3,36 +3,59 @@ package app;
 import database.DatabaseUtil;
 
 public class ServerUtil {
-	
-	public String parseClient(String clientMsg) {
+	private Player player;
+	public Object parseClient(String clientMsg) {
 		String [] clientMsgArr = clientMsg.split(" ");
-		String command = clientMsgArr[0];
 		
-		switch(command) {
+		switch(clientMsgArr[0].toLowerCase()) {
 			case "pseudo": return parsePseudo(clientMsgArr);
-			case "join"  : return parseJoin();break;
-			case "ready" : ;break;
-			case "guess" : ;break;
+			case "join"  : return parseJoin(clientMsgArr[-1]);
+			case "ready" : return parseReady();
+			case "guess" : return parseGuess(clientMsgArr[-1]);
 			case "chat"  : parseChat();break;
-			default: ; 
+			default: return "Command not recognized"; 
 		}
-		return "Khusra";
+		return "";
 	}
 	
-	//parseClient methods
+	//processes pseudo command
 	private String parsePseudo(String [] clientMsgArr) {
-		Player plr = DatabaseUtil.searchTicket(clientMsgArr[1]);
+		this.player = DatabaseUtil.searchTicket(clientMsgArr[1]);
 		
-		return plr.getTicket()+"\nWelcome"+plr.getNickname();
+		return this.player.getTicket()+"\nWelcome"+this.player.getNickname();
 	}
-	private String parseJoin() {
+	
+	//processes join command
+	private Game parseJoin(String gameId) {
+		
+		for(Game game:Server.getListOfGames()) { //iterating games
+			
+			if(game.getGameId().equals(gameId)) { //matching the gameId
+				
+				if(game.listOfCurrentPlayers.size()<7) { //checking for max player constraint
+					game.listOfCurrentPlayers.add(this.player); //adding player in game if players in game less than 7
+				}
+				
+				return game; //returning the game object
+			}
+			
+		}
+		
+		return null; //failed to find game in list of games returns null
 		
 	}
-	private void parseReady() {
 	
+	//processes ready command
+	private String parseReady() {
+		this.player.setReady(true);
+		return this.player.getTicket()+" is ready";
 	}
-	private void parseGuess() {
 	
+	
+	private int parseGuess(String guess) {
+		this.player.setGuess(Integer.parseInt(guess));
+		return Integer.parseInt(guess);
+		
 	}
 	
 	private void parseChat() {
@@ -45,6 +68,14 @@ public class ServerUtil {
 	public String getLeaderBoard() {
 		return null;
 		
+	}
+
+	public Player getPlayer() {
+		return player;
+	}
+
+	public void setPlayer(Player player) {
+		this.player = player;
 	}
 	
 }

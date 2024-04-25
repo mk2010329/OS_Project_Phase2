@@ -1,6 +1,5 @@
 package app;
 
-
 public class Player {
 
 	private String nickname;
@@ -8,13 +7,13 @@ public class Player {
 	private String ticket;
 	private int gamePoints;
 	private int guess;
+	private boolean ready;
 	
 	public Player(String nickname, int numberOfWins, String ticket) {
-		this.gamePoints = 0;
 		this.nickname = nickname;
 		this.numberOfWins = numberOfWins;
 		this.ticket = ticket;
-		this.gamePoints = gamePoints;
+		this.gamePoints = 0;
 	}
 
 	public String getNickname() {
@@ -62,6 +61,14 @@ public class Player {
 	public String toString() {
 		return "Player [nickname=" + nickname + ", numberOfWins=" + numberOfWins + ", ticket=" + ticket
 				+ ", gamePoints=" + gamePoints + "]";
+	}
+
+	public boolean isReady() {
+		return ready;
+	}
+
+	public void setReady(boolean ready) {
+		this.ready = ready;
 	}
 
 
