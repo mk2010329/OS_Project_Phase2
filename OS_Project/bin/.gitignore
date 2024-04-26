@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 /Tester.class
 /database/
@@ -9,3 +10,9 @@
 /Server$1.class
 
 /app/
+=======
+/database/
+/dummy/
+/app/
+/chat/
+>>>>>>> 9989f69f8a3a083a691e5c6062fb78071fd99376

@@ -1,8 +1,13 @@
 package app;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.net.Socket;
+
 import database.DatabaseUtil;
 
 public class ServerUtil {
+
 	private static Player player;
 	public static Object parseClient(String clientMsg) throws ClassNotFoundException {
 		String [] clientMsgArr = clientMsg.split(" ");
@@ -34,15 +39,16 @@ public class ServerUtil {
 				
 				if(game.listOfCurrentPlayers.size()<7) { //checking for max player constraint
 					game.listOfCurrentPlayers.add(player); //adding player in game if players in game less than 7
+
 				}
-				
-				return game; //returning the game object
+
+				return game; // returning the game object
 			}
-			
+
 		}
-		
-		return null; //failed to find game in list of games returns null
-		
+
+		return null; // failed to find game in list of games returns null
+
 	}
 	
 	//processes ready command
@@ -54,20 +60,23 @@ public class ServerUtil {
 	
 	private static int parseGuess(String guess) {
 		player.setGuess(Integer.parseInt(guess));
+
 		return Integer.parseInt(guess);
-		
+
 	}
-	
+
 	private static void parseChat() {
+		Socket socket;
+		BufferedReader bufferedReader;
+		BufferedWriter bufferedWriter;
+		String username;
 		
 	}
-	
-	
-	
-	
-	public String getLeaderBoard() {
-		return null;
+
+	public String getLeaderBoard() throws ClassNotFoundException {
 		
+		String leaderboard = DatabaseUtil.getTopFivePlayers().toString();
+		return leaderboard;
 	}
 
 	public Player getPlayer() {
@@ -77,5 +86,5 @@ public class ServerUtil {
 	public void setPlayer(Player player) {
 		player = player;
 	}
-	
+
 }
