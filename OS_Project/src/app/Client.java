@@ -10,25 +10,25 @@ public class Client {
 		BufferedReader from_user;
 		
 		try {
-			// Get a Socket to the daytime service,
 
-			Socket client = new Socket("localhost", 1300);
+			Socket client = new Socket("localhost", 13337);
 			from_server = new BufferedReader(new InputStreamReader(client.getInputStream()));
 			from_user = new BufferedReader(new InputStreamReader(System.in));
 			to_server = new PrintWriter(client.getOutputStream(), true);
+			
 			System.out.println("Connected with server " +
 					client.getInetAddress() + ":" +
 					client.getPort());
 			
 			while(true) {
 				String msg = from_server.readLine();
-				System.out.print(msg);
+				
+				System.out.printf(msg);
 				if(msg.equals("Done") || client == null) {
 					break;
 				}
 				String userInput= from_user.readLine();
 				to_server.println(userInput);
-				
 			}
 			// Display result on the screen
 			//System.out.println("Result = " + reader.readLine());

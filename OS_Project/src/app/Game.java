@@ -14,7 +14,11 @@ public class Game implements Runnable {
 	
 	public  ArrayList<Integer> listOfCurrentGuesses = new ArrayList<>();
 	public ArrayList<Player> listOfCurrentPlayers = new ArrayList<>();
+
 	private String gameId;
+
+	private String gameName;
+
 	
 	Socket nextClient;
 	PrintWriter to_client;
@@ -22,6 +26,7 @@ public class Game implements Runnable {
 	int countTrials=0;
 	long currentTime = System.currentTimeMillis();
 	long newTime, diff;
+
 	public Game() {
 		//	super();
 		}
@@ -50,7 +55,7 @@ public class Game implements Runnable {
 				int serverSum = numb1 + numb2 + numb3;
 				
 				to_client.println("Enter the Sum of 3 numbers: "+numb1+" "+numb2+" "+numb3);
-				
+			//	from_client.readLine();
 				String userSum = from_client.readLine();
 				
 				int userSumInt = Integer.parseInt(userSum);
