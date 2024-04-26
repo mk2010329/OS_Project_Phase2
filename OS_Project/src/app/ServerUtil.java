@@ -4,7 +4,7 @@ import database.DatabaseUtil;
 
 public class ServerUtil {
 	private Player player;
-	public Object parseClient(String clientMsg) {
+	public Object parseClient(String clientMsg) throws ClassNotFoundException {
 		String [] clientMsgArr = clientMsg.split(" ");
 		
 		switch(clientMsgArr[0].toLowerCase()) {
