@@ -3,6 +3,7 @@ package app;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.net.Socket;
+import java.util.ArrayList;
 
 import database.DatabaseUtil;
 
@@ -73,10 +74,13 @@ public class ServerUtil {
 		
 	}
 
-	public String getLeaderBoard() throws ClassNotFoundException {
+	public static String getLeaderBoard() throws ClassNotFoundException {
 		
-		String leaderboard = DatabaseUtil.getTopFivePlayers().toString();
-		return leaderboard;
+		ArrayList<Player> leaderboardArr = DatabaseUtil.getTopFivePlayers();
+		String leaderboardString = leaderboardArr.stream()
+				.map(p -> p.toString() + "\n")
+					.reduce("", (acc, curr) -> acc + curr);
+		return leaderboardString;
 	}
 
 	public Player getPlayer() {

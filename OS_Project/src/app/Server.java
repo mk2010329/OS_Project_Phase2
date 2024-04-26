@@ -7,6 +7,7 @@ import java.util.*;
 public class Server {
 	
 	private static ArrayList<Game> listOfGames; //array list to store games
+	private static ArrayList<Player> listOfLoggedInPlayers; //array list to store Players
 	
 	public static void main(String args[]) {
 		try {
@@ -20,6 +21,7 @@ public class Server {
 			
 			
 			setListOfGames(new ArrayList<>()); //Initializing list of games array list
+			setListOfLoggedInPlayers(new ArrayList<>()); //Initializing list of Players array list
 			
 			Game g1 = new Game();
 			Game g2 = new Game();
@@ -42,7 +44,7 @@ public class Server {
 				System.out.println("Receiving Request From " +
 						nextClient.getInetAddress() + ":" +
 						nextClient.getPort());
-				
+			//	listOfLoggedInPlayers.add(null)
 				Server.initialService(nextClient);
 
 				//				output.println();
@@ -62,16 +64,24 @@ public class Server {
 	}
 	
 	 
+	public static ArrayList<Player> getListOfLoggedInPlayers() {
+		return listOfLoggedInPlayers;
+	}
+
+	public static void setListOfLoggedInPlayers(ArrayList<Player> listOfLoggedInPlayers) {
+		Server.listOfLoggedInPlayers = listOfLoggedInPlayers;
+	}
+
 	private static void initialService(Socket nextClient) {
 		new Thread(new Runnable() {
 			PrintWriter output;
 			BufferedReader fromClient;
+			StringBuilder sb = new StringBuilder();
 			@Override
 			public void run() {
 
 				try {
 				
-					
 					output = new PrintWriter(nextClient.getOutputStream(), true);
 					output.println("Identify Yourself: ");
 					// reading ticket/name from client
@@ -81,9 +91,20 @@ public class Server {
 					// parsing the input in ServerUtil
 					Player player = (Player) ServerUtil.parseClient(fromClient.readLine());
 					
+					
 					String welcomeMessage ="Welcome "+player.getNickname()+" Your ticket is " +player.getTicket();
+//					String s = new StringBuilder()
+//				           .append(welcomeMessage+"\n")
+//				           .append("Leaderboeard:\n")
+//				           .append(ServerUtil.getLeaderBoard()+"\n")
+//				           .toString();
+					//Client.print(s);
 					output.println(welcomeMessage);
-				//	output.println(listOfGames);
+					output.println("Leaderboard:");
+					output.println(ServerUtil.getLeaderBoard());
+					output.println(listOfGames.toString());
+			
+				//	output.println();
 //					String ticket ="sane1";
 					//Player player = new Player(fromClient.readLine(), 0, ticket, 0);
 					//Game game = new Game();
