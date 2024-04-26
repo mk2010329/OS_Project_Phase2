@@ -31,6 +31,7 @@ public class Server {
 	private static void initialService(Socket nextClient) {
 		new Thread(new Runnable() {
 			PrintWriter output;
+			BufferedReader fromClient;
 			@Override
 			public void run() {
 
@@ -38,17 +39,17 @@ public class Server {
 					output = new PrintWriter(nextClient.getOutputStream(), true);
 					output.println("Identify Yourself: ");
 					// reading ticket/name from client
-					BufferedReader fromClient = 
-							new BufferedReader(new InputStreamReader(nextClient.getInputStream()));
+				  
+				fromClient=new BufferedReader(new InputStreamReader(nextClient.getInputStream()));
 				
 					String ticket ="sane1";
-					Player player = new Player(fromClient.readLine(), 0, ticket, 0);
-					Game game = new Game();
-					game.listOfCurrentPlayers.add(player);
+					//Player player = new Player(fromClient.readLine(), 0, ticket, 0);
+					//Game game = new Game();
+					//game.listOfCurrentPlayers.add(player);
 					output.println("Welcome "+fromClient.readLine()+", Your Ticket is "+ticket);
 				
-				//	Game game = new Game(nextClient);
-					//game.run();
+				    Game game1 = new Game(nextClient);
+					game1.run();
 					
 				} catch (IOException e) {
 					e.printStackTrace();
