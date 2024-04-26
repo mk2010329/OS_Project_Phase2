@@ -60,18 +60,23 @@ public class Server {
 					output.println("Identify Yourself: ");
 					// reading ticket/name from client
 				  
-				fromClient=new BufferedReader(new InputStreamReader(nextClient.getInputStream()));
-				
-					String ticket ="sane1";
+					fromClient=new BufferedReader(new InputStreamReader(nextClient.getInputStream()));
+					
+					// parsing the input in ServerUtil
+					Player player = (Player) ServerUtil.parseClient(fromClient.readLine());
+					
+					String welcomeMessage ="Welcome "+player.getNickname()+" Your ticket is " +player.getTicket();
+					output.println(welcomeMessage);
+					
+//					String ticket ="sane1";
 					//Player player = new Player(fromClient.readLine(), 0, ticket, 0);
 					//Game game = new Game();
 					//game.listOfCurrentPlayers.add(player);
-					output.println("Welcome "+fromClient.readLine()+", Your Ticket is "+ticket);
-				
-				    Game game1 = new Game(nextClient);
-					game1.run();
+//				
+//				    Game game1 = new Game(nextClient);
+//					game1.run();
 					
-				} catch (IOException e) {
+				} catch (IOException | ClassNotFoundException e) {
 					e.printStackTrace();
 				} 
 

@@ -3,15 +3,15 @@ package app;
 import database.DatabaseUtil;
 
 public class ServerUtil {
-	private Player player;
-	public Object parseClient(String clientMsg) throws ClassNotFoundException {
+	private static Player player;
+	public static Object parseClient(String clientMsg) throws ClassNotFoundException {
 		String [] clientMsgArr = clientMsg.split(" ");
 		
 		switch(clientMsgArr[0].toLowerCase()) {
 			case "pseudo": return parsePseudo(clientMsgArr);
-			case "join"  : return parseJoin(clientMsgArr[-1]);
+			case "join"  : return parseJoin(clientMsgArr[1]);
 			case "ready" : return parseReady();
-			case "guess" : return parseGuess(clientMsgArr[-1]);
+			case "guess" : return parseGuess(clientMsgArr[1]);
 			case "chat"  : parseChat();break;
 			default: return "Command not recognized"; 
 		}
@@ -19,21 +19,21 @@ public class ServerUtil {
 	}
 	
 	//processes pseudo command
-	private Player parsePseudo(String [] clientMsgArr) throws ClassNotFoundException {
-		this.player = DatabaseUtil.searchTicket(clientMsgArr[1]);
+	private static Player parsePseudo(String [] clientMsgArr) throws ClassNotFoundException {
+		player = DatabaseUtil.searchTicket(clientMsgArr[1]);
 		
-		return this.player;//.getTicket()+"\nWelcome"+this.player.getNickname()
+		return player;//.getTicket()+"\nWelcome"+player.getNickname()
 	}
 	
 	//processes join command
-	private Game parseJoin(String gameId) {
+	private static Game parseJoin(String gameId) {
 		
 		for(Game game:Server.getListOfGames()) { //iterating games
 			
 			if(game.getGameId().equals(gameId)) { //matching the gameId
 				
 				if(game.listOfCurrentPlayers.size()<7) { //checking for max player constraint
-					game.listOfCurrentPlayers.add(this.player); //adding player in game if players in game less than 7
+					game.listOfCurrentPlayers.add(player); //adding player in game if players in game less than 7
 				}
 				
 				return game; //returning the game object
@@ -46,19 +46,19 @@ public class ServerUtil {
 	}
 	
 	//processes ready command
-	private String parseReady() {
-		this.player.setReady(true);
-		return this.player.getTicket()+" is ready";
+	private static String parseReady() {
+		player.setReady(true);
+		return player.getTicket()+" is ready";
 	}
 	
 	
-	private int parseGuess(String guess) {
-		this.player.setGuess(Integer.parseInt(guess));
+	private static int parseGuess(String guess) {
+		player.setGuess(Integer.parseInt(guess));
 		return Integer.parseInt(guess);
 		
 	}
 	
-	private void parseChat() {
+	private static void parseChat() {
 		
 	}
 	
@@ -75,7 +75,7 @@ public class ServerUtil {
 	}
 
 	public void setPlayer(Player player) {
-		this.player = player;
+		player = player;
 	}
 	
 }
