@@ -5,6 +5,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+
 import app.Player;
 
 public class DatabaseUtil {
@@ -36,7 +38,7 @@ public class DatabaseUtil {
 	
 	public static void seedPlayerTable() throws ClassNotFoundException {
 		String sql = "INSERT INTO players (nickname, numberOfWins)\n" +
-					 "VALUES('jay', 0);";
+					 "VALUES('jay', 11);";
 		
 		try (Statement statement = DatabaseUtil.makeConnection().createStatement()) {
 			// populate the table
@@ -118,6 +120,28 @@ public class DatabaseUtil {
 			System.out.println(e.getMessage());
 		}
 		
+	}
+	
+	public static ArrayList<Player> getTopFivePlayers() throws ClassNotFoundException {
+		String sql = "SELECT * FROM players ORDER BY numberOfWins DESC LIMIT 5;";
+		ArrayList<Player> leaderboard = new ArrayList<>();
+		
+		try (Statement statement = DatabaseUtil.makeConnection().createStatement()) {	
+			ResultSet resultSet = statement.executeQuery(sql);
+			while (resultSet.next()) {
+				int ticket_temp = resultSet.getInt(1);
+				String nickname = resultSet.getString(2);
+				String ticket = resultSet.getString(3);
+				int numberWins = resultSet.getInt(4);
+
+				Player player = new Player(nickname, numberWins, ticket, numberWins);
+				leaderboard.add(player);
+			}
+			
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+		return leaderboard;
 	}
 	
 
