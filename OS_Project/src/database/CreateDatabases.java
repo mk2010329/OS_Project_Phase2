@@ -7,7 +7,7 @@ public class CreateDatabases {
 		DatabaseUtil.createPlayerTable();
 		DatabaseUtil.seedPlayerTable();
 		DatabaseUtil.displayPlayersTable();
-		String[] tokenArr = {"pseudo", "3jay"};
+		String tokenArr = "jane";
 		System.out.println(DatabaseUtil.searchTicket(tokenArr));
 
 	}

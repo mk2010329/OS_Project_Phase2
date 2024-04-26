@@ -1,4 +1,4 @@
-package app;
+	package app;
 
 import database.DatabaseUtil;
 
@@ -19,10 +19,10 @@ public class ServerUtil {
 	}
 	
 	//processes pseudo command
-	private String parsePseudo(String [] clientMsgArr) {
+	private Player parsePseudo(String [] clientMsgArr) throws ClassNotFoundException {
 		this.player = DatabaseUtil.searchTicket(clientMsgArr[1]);
 		
-		return this.player.getTicket()+"\nWelcome"+this.player.getNickname();
+		return this.player;//.getTicket()+"\nWelcome"+this.player.getNickname()
 	}
 	
 	//processes join command

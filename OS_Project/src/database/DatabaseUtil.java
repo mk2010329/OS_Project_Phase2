@@ -66,11 +66,31 @@ public class DatabaseUtil {
 		}
 	}
 
-	public static Player searchTicket(String[] tokenArray) throws ClassNotFoundException {
+	// checks if there exists a player record, and inserts if there is not
+	public static Player searchTicket(String queryTicket) throws ClassNotFoundException {
 		
-		String sql = "SELECT * FROM players WHERE ticket LIKE " + "'"+tokenArray[1]+"'";
+		String sql = "SELECT * FROM players WHERE ticket LIKE " + "'"+queryTicket+"'";
 		
 		try (Statement statement = DatabaseUtil.makeConnection().createStatement()) {
+			ResultSet resultSet = statement.executeQuery(sql);
+			while (resultSet.next()) {
+				int ticket_temp = resultSet.getInt(1);
+				String nickname = resultSet.getString(2);
+				String ticket = resultSet.getString(3);
+				int numberWins = resultSet.getInt(4);
+
+				Player player = new Player(nickname, numberWins, ticket);
+				
+				return player;
+			}
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+		// insert player and then return it
+		DatabaseUtil.insertPlayer(queryTicket);
+		
+		try (Statement statement = DatabaseUtil.makeConnection().createStatement()) {
+			sql = "SELECT * FROM players WHERE nickname LIKE " + "'"+queryTicket+"'";
 			ResultSet resultSet = statement.executeQuery(sql);
 			while (resultSet.next()) {
 				int ticket_temp = resultSet.getInt(1);
@@ -88,15 +108,12 @@ public class DatabaseUtil {
 		return null;
 	}
 	
-	public static String insertPlayer(String[] tokenArray) throws ClassNotFoundException {
+	public static void insertPlayer(String queryTicket) throws ClassNotFoundException {
 		String sql = "INSERT INTO players (nickname, numberOfWins)\n" +
-				 "VALUES('"+ tokenArray[1] +"', 0);";
+				 "VALUES('"+ queryTicket +"', 0);";
 	
 		try (Statement statement = DatabaseUtil.makeConnection().createStatement()) {
 			statement.execute(sql);
-			
-			// I am changing the specification of the command to: "pseudo ticket blabla"
-			
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
