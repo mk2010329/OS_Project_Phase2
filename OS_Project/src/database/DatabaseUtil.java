@@ -88,5 +88,20 @@ public class DatabaseUtil {
 		return null;
 	}
 	
+	public static String insertPlayer(String[] tokenArray) throws ClassNotFoundException {
+		String sql = "INSERT INTO players (nickname, numberOfWins)\n" +
+				 "VALUES('"+ tokenArray[1] +"', 0);";
+	
+		try (Statement statement = DatabaseUtil.makeConnection().createStatement()) {
+			statement.execute(sql);
+			
+			// I am changing the specification of the command to: "pseudo ticket blabla"
+			
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+		
+	}
+	
 
 }
