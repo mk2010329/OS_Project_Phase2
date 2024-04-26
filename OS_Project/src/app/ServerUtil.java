@@ -78,9 +78,10 @@ public class ServerUtil {
 
 	}
 
-	public String getLeaderBoard() {
-		return null;
-
+	public String getLeaderBoard() throws ClassNotFoundException {
+		
+		String leaderboard = DatabaseUtil.getTopFivePlayers().toString();
+		return leaderboard;
 	}
 
 	public Player getPlayer() {

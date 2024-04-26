@@ -15,6 +15,13 @@ public class Player {
 		this.ticket = ticket;
 		this.gamePoints = 0;
 	}
+	
+	public Player(String nickname, int numberOfWins, String ticket, int gamePoints) {
+		this.nickname = nickname;
+		this.numberOfWins = numberOfWins;
+		this.ticket = ticket;
+		this.gamePoints = gamePoints;
+	}
 
 	public String getNickname() {
 		return nickname;
