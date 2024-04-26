@@ -9,7 +9,7 @@ public class Player {
 	private int guess;
 	private boolean ready;
 	private String roundStatus;
-	
+
 	public Player(String nickname, int numberOfWins, String ticket) {
 		this.nickname = nickname;
 		this.numberOfWins = numberOfWins;
@@ -65,6 +65,13 @@ public class Player {
 	public void setGuess(int guess) {
 		this.guess = guess;
 	}
+	public String getRoundStatus() {
+		return roundStatus;
+	}
+
+	public void setRoundStatus(String roundStatus) {
+		this.roundStatus = roundStatus;
+	}
 
 	@Override
 	public String toString() {
@@ -78,14 +85,7 @@ public class Player {
 	public void setReady(boolean ready) {
 		this.ready = ready;
 	}
-
-	public String getRoundStatus() {
-		return roundStatus;
-	}
-
-	public void setRoundStatus(String roundStatus) {
-		this.roundStatus = roundStatus;
-	}
+	
 
 
 }

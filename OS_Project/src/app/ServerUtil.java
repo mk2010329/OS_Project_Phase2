@@ -1,14 +1,16 @@
 package app;
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
+import chat.Client;
+import java.io.IOException;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Scanner;
+
 import database.DatabaseUtil;
 
 public class ServerUtil {
 	private static Player player;
-	public static Object parseClient(String clientMsg) throws ClassNotFoundException {
+	public static Object parseClient(String clientMsg) throws ClassNotFoundException, UnknownHostException, IOException {
 		String [] clientMsgArr = clientMsg.split(" ");
 		
 		switch(clientMsgArr[0].toLowerCase()) {
@@ -64,16 +66,16 @@ public class ServerUtil {
 
 	}
 
-	private static void parseChat() {
-		Socket socket;
-		BufferedReader bufferedReader;
-		BufferedWriter bufferedWriter;
-		String username;
-		
+	private static void parseChat() throws UnknownHostException, IOException {
+		Scanner scanner = new Scanner(System.in);
+		String username = player.getNickname();
+		Socket socket = new Socket("localhost", 1234);
+		Client client = new Client(socket, username);
+		client.listenForMe();
+		client.sendMessage();
 	}
-
+	
 	public static String getLeaderBoard() throws ClassNotFoundException {
-		
 		ArrayList<Player> leaderboardArr = DatabaseUtil.getTopFivePlayers();
 		String leaderboardString = leaderboardArr.stream()
 				.map(p -> p.toString() + "\n")
