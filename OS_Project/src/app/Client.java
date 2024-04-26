@@ -21,14 +21,20 @@ public class Client {
 					client.getPort());
 			
 			while(true) {
+				//identify yourself
 				String msg = from_server.readLine();
-				
 				System.out.printf(msg);
 				if(msg.equals("Done") || client == null) {
 					break;
 				}
+				//entering your name
 				String userInput= from_user.readLine();
 				to_server.println(userInput);
+
+				while ((msg = from_server.readLine()) != null) {
+					System.out.println();
+					System.out.printf(msg);
+				}
 			}
 			// Display result on the screen
 			//System.out.println("Result = " + reader.readLine());

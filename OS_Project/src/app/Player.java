@@ -8,12 +8,14 @@ public class Player {
 	private int gamePoints;
 	private int guess;
 	private boolean ready;
+	private String roundStatus;
 	
 	public Player(String nickname, int numberOfWins, String ticket) {
 		this.nickname = nickname;
 		this.numberOfWins = numberOfWins;
 		this.ticket = ticket;
 		this.gamePoints = 0;
+		this.ready=false;
 	}
 	
 	public Player(String nickname, int numberOfWins, String ticket, int gamePoints) {
@@ -66,8 +68,7 @@ public class Player {
 
 	@Override
 	public String toString() {
-		return "Player [nickname=" + nickname + ", numberOfWins=" + numberOfWins + ", ticket=" + ticket
-				+ ", gamePoints=" + gamePoints + "]";
+		return "Player [Name= " + nickname + ", Wins= " + numberOfWins +"]";
 	}
 
 	public boolean isReady() {
@@ -76,6 +77,14 @@ public class Player {
 
 	public void setReady(boolean ready) {
 		this.ready = ready;
+	}
+
+	public String getRoundStatus() {
+		return roundStatus;
+	}
+
+	public void setRoundStatus(String roundStatus) {
+		this.roundStatus = roundStatus;
 	}
 
 

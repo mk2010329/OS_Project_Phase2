@@ -130,5 +130,10 @@ public class Game implements Runnable {
 	public void setGameId(String gameId) {
 		this.gameId = gameId;
 	}
+	@Override
+	public String toString() {
+		return "Game=" + gameId + ", Game Name=" + gameName ;
+	}
+	
 
 }
