@@ -1,3 +1,4 @@
+package app;
 
 public class Player {
 
@@ -8,12 +9,11 @@ public class Player {
 	private int guess;
 	private boolean ready;
 	
-	public Player(String nickname, int numberOfWins, String ticket, int gamePoints) {
-		
+	public Player(String nickname, int numberOfWins, String ticket) {
 		this.nickname = nickname;
 		this.numberOfWins = numberOfWins;
 		this.ticket = ticket;
-		this.gamePoints = gamePoints;
+		this.gamePoints = 0;
 	}
 
 	public String getNickname() {
