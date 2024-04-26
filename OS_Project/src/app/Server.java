@@ -20,6 +20,20 @@ public class Server {
 			
 			
 			setListOfGames(new ArrayList<>()); //Initializing list of games array list
+			
+			Game g1 = new Game();
+			Game g2 = new Game();
+			Game g3 = new Game();
+			
+			g1.setGameId("game1");
+			g2.setGameId("game2");
+			g3.setGameId("game3");
+			
+			
+			listOfGames.add(g1);
+			listOfGames.add(g2);
+			listOfGames.add(g3);
+			
 
 			for(;;) {
 				// Get the next TCP Client
@@ -28,7 +42,7 @@ public class Server {
 				System.out.println("Receiving Request From " +
 						nextClient.getInetAddress() + ":" +
 						nextClient.getPort());
-
+				
 				Server.initialService(nextClient);
 
 				//				output.println();
@@ -56,6 +70,8 @@ public class Server {
 			public void run() {
 
 				try {
+				
+					
 					output = new PrintWriter(nextClient.getOutputStream(), true);
 					output.println("Identify Yourself: ");
 					// reading ticket/name from client
@@ -67,7 +83,7 @@ public class Server {
 					
 					String welcomeMessage ="Welcome "+player.getNickname()+" Your ticket is " +player.getTicket();
 					output.println(welcomeMessage);
-					
+				//	output.println(listOfGames);
 //					String ticket ="sane1";
 					//Player player = new Player(fromClient.readLine(), 0, ticket, 0);
 					//Game game = new Game();
