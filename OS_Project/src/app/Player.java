@@ -75,6 +75,11 @@ public class Player {
 
 	@Override
 	public String toString() {
+		return "Player [Name= " + nickname + ", ticket= " + ticket +"]";
+		
+	}
+	
+	public String printPlayer() {
 		return "Player [Name= " + nickname + ", Wins= " + numberOfWins +"]";
 	}
 

@@ -15,9 +15,9 @@ public class Server {
 			@SuppressWarnings("resource")
 
 			ServerSocket server = new ServerSocket(13337);
+			System.out.println("Server Started");
 			System.out.println("Server waiting for client on port " +
 					server.getLocalPort());
-			System.out.println("Server Started");
 			
 			
 			setListOfGames(new ArrayList<>()); //Initializing list of games array list
@@ -44,7 +44,6 @@ public class Server {
 				System.out.println("Receiving Request From " +
 						nextClient.getInetAddress() + ":" +
 						nextClient.getPort());
-			//	listOfLoggedInPlayers.add(null)
 				Server.initialService(nextClient);
 
 				//				output.println();
@@ -90,28 +89,22 @@ public class Server {
 					
 					// parsing the input in ServerUtil
 					Player player = (Player) ServerUtil.parseClient(fromClient.readLine());
-					
+					listOfLoggedInPlayers.add(player);
 					
 					String welcomeMessage ="Welcome "+player.getNickname()+" Your ticket is " +player.getTicket();
-//					String s = new StringBuilder()
-//				           .append(welcomeMessage+"\n")
-//				           .append("Leaderboeard:\n")
-//				           .append(ServerUtil.getLeaderBoard()+"\n")
-//				           .toString();
-					//Client.print(s);
+
 					output.println(welcomeMessage);
 					output.println("Leaderboard:");
 					output.println(ServerUtil.getLeaderBoard());
+					output.println("Games available:");
 					output.println(listOfGames.toString());
-			
-				//	output.println();
-//					String ticket ="sane1";
-					//Player player = new Player(fromClient.readLine(), 0, ticket, 0);
-					//Game game = new Game();
+					output.println("All Players:");
+					output.println(listOfLoggedInPlayers.toString());
+				//	Game game = new Game();
 					//game.listOfCurrentPlayers.add(player);
 //				
-//				    Game game1 = new Game(nextClient);
-//					game1.run();
+				  //  Game game1 = new Game(nextClient);
+				//    game1.run();
 					
 				} catch (IOException | ClassNotFoundException e) {
 					e.printStackTrace();

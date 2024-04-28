@@ -27,7 +27,6 @@ public class ServerUtil {
 	//processes pseudo command
 	private static Player parsePseudo(String [] clientMsgArr) throws ClassNotFoundException {
 		player = DatabaseUtil.searchTicket(clientMsgArr[1]);
-		
 		return player;//.getTicket()+"\nWelcome"+player.getNickname()
 	}
 	
@@ -78,7 +77,7 @@ public class ServerUtil {
 	public static String getLeaderBoard() throws ClassNotFoundException {
 		ArrayList<Player> leaderboardArr = DatabaseUtil.getTopFivePlayers();
 		String leaderboardString = leaderboardArr.stream()
-				.map(p -> p.toString() + "\n")
+				.map(p -> p.printPlayer() + "\n")
 					.reduce("", (acc, curr) -> acc + curr);
 		return leaderboardString;
 	}
