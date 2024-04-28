@@ -19,8 +19,9 @@ public class Client {
 			System.out.println("Connected with server " +
 					client.getInetAddress() + ":" +
 					client.getPort());
-			
+			int counter =0;
 			while(true) {
+				
 				//identify yourself
 				String msg = from_server.readLine();
 				System.out.printf(msg);
@@ -32,10 +33,20 @@ public class Client {
 				to_server.println(userInput);
 
 				while ((msg = from_server.readLine()) != null) {
-					System.out.println();
-					System.out.printf(msg);
-				
+					if(counter==0) {
+						System.out.println();
+						System.out.printf(msg);
+						counter++;
 					}
+					else {
+						break;
+					}
+		
+					}
+				System.out.println("hello");
+				userInput= from_user.readLine();
+				to_server.println(userInput);
+			
 			}
 			// Display result on the screen
 			//System.out.println("Result = " + reader.readLine());

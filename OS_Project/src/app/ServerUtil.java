@@ -10,6 +10,7 @@ import database.DatabaseUtil;
 
 public class ServerUtil {
 	private static Player player;
+	public static Socket nextClient;
 	public static Object parseClient(String clientMsg) throws ClassNotFoundException, UnknownHostException, IOException {
 		String [] clientMsgArr = clientMsg.split(" ");
 		
@@ -32,7 +33,6 @@ public class ServerUtil {
 	
 	//processes join command
 	private static Game parseJoin(String gameId) {
-		
 		for(Game game:Server.getListOfGames()) { //iterating games
 			
 			if(game.getGameId().equals(gameId)) { //matching the gameId
@@ -46,7 +46,8 @@ public class ServerUtil {
 			}
 
 		}
-
+		Game game = new Game(nextClient);
+		game.run();
 		return null; // failed to find game in list of games returns null
 
 	}
