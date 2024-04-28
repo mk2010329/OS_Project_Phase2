@@ -101,7 +101,8 @@ public class Server {
 					output.println("All Players:");
 					output.println(listOfLoggedInPlayers.toString());
 					output.println("Join any game: ");
-					System.out.println(ServerUtil.parseClient(fromClient.readLine())); 
+					System.out.println(fromClient.readLine());
+					//System.out.println(ServerUtil.parseClient(fromClient.readLine()));
 				//	Game game = new Game();
 					//game.listOfCurrentPlayers.add(player);
 //				

@@ -37,6 +37,7 @@ public class Client {
 						System.out.println();
 						System.out.printf(msg);
 					}
+					System.out.println("out");
 					counter++;
 				}
 				System.out.println("hello");
