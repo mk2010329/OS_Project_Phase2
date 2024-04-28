@@ -32,17 +32,13 @@ public class Client {
 				String userInput= from_user.readLine();
 				to_server.println(userInput);
 
-				while ((msg = from_server.readLine()) != null) {
-					if(counter==0) {
+				if(counter==0) {
+					while ((msg = from_server.readLine()) != null) {
 						System.out.println();
 						System.out.printf(msg);
-						counter++;
 					}
-					else {
-						break;
-					}
-		
-					}
+					counter++;
+				}
 				System.out.println("hello");
 				userInput= from_user.readLine();
 				to_server.println(userInput);
