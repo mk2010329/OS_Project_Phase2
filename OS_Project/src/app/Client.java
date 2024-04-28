@@ -21,7 +21,6 @@ public class Client {
 					client.getPort());
 			
 			while(true) {
-				int counter =0;
 				//identify yourself
 				String msg = from_server.readLine();
 				System.out.printf(msg);
@@ -35,12 +34,8 @@ public class Client {
 				while ((msg = from_server.readLine()) != null) {
 					System.out.println();
 					System.out.printf(msg);
-					counter++;
-					if(counter==1) {
-						break;
 					}
-				}
-				System.out.println("hello");
+				
 				userInput= from_user.readLine();
 				to_server.println(userInput);
 			
