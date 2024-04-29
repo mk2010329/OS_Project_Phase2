@@ -4,7 +4,7 @@ public class CreateDatabases {
 
 	public static void main(String[] args) throws ClassNotFoundException {
 		
-//		DatabaseUtil.createPlayerTable();
+		DatabaseUtil.createPlayerTable();
 //		DatabaseUtil.seedPlayerTable();
 		DatabaseUtil.displayPlayersTable();
 		String tokenArr = "215jay";

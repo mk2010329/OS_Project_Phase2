@@ -19,13 +19,11 @@ public class QuickSumServer {
 				System.out.println("Receiving Request From " +
 						nextClient.getInetAddress() + ":" +
 						nextClient.getPort());
-				// Write the current time to the client socket
-				PrintWriter output =
-						new PrintWriter(nextClient.getOutputStream(), true);
-				output.println(new Date());
-				// Close connection
-				nextClient.close();
-			}
+				
+				Service serverThread = new Service(nextClient);
+				serverThread.start();
+			
+			} 
 		} catch(IOException ioe){
 			System.out.println("Error" + ioe);
 		}
