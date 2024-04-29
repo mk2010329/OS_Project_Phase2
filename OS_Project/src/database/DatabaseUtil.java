@@ -144,5 +144,18 @@ public class DatabaseUtil {
 		return leaderboard;
 	}
 	
+	public static int incrementPlayerNumberOfWins(String ticket) throws ClassNotFoundException {
+		String sql = "UPDATE players\n"
+				+ "SET numberOfWins = numberOfWins + 1\n"
+				+ "WHERE players.ticket ='" + ticket + "';";
+	
+		try (Statement statement = DatabaseUtil.makeConnection().createStatement()) {
+			return statement.executeUpdate(sql);
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+		return 0;
+	}
+	
 
 }
