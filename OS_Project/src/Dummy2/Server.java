@@ -1,0 +1,48 @@
+package Dummy2;
+
+import java.io.*;
+import java.net.*;
+import java.util.*;
+
+public class Server {
+	
+	private static final int PORT = 13337;
+    private static List<Player> players = new ArrayList<>();
+    private static List<Game> games = new ArrayList<>();
+    private static int ticketCounter = 1;
+
+    public static void main(String[] args) {
+        try (ServerSocket serverSocket = new ServerSocket(PORT)) {
+            System.out.println("Server started. Listening on port " + PORT);
+            while (true) {
+                Socket clientSocket = serverSocket.accept();
+                Player player = new Player(clientSocket);
+                players.add(player);
+                new Thread(player).start();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+//    public static synchronized int generateTicket() {
+//        return ticketCounter++;
+//    }
+
+    public static synchronized void removePlayer(Player player) {
+        players.remove(player);
+    }
+
+    public static synchronized List<Game> getGames() {
+        return games;
+    }
+
+    public static synchronized void addGame(Game game) {
+        games.add(game);
+    }
+
+    public static synchronized void removeGame(Game game) {
+        games.remove(game);
+    }
+
+}

@@ -41,13 +41,12 @@ public class ServerUtil {
 					game.listOfCurrentPlayers.add(player); //adding player in game if players in game less than 7
 
 				}
-
+				Thread gameThread = new Thread(new Game(nextClient));
+				gameThread.start();
 				return game; // returning the game object
 			}
 
 		}
-		Game game = new Game(nextClient);
-		game.run();
 		return null; // failed to find game in list of games returns null
 
 	}

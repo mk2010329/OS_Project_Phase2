@@ -10,6 +10,7 @@ public class Player {
 	private boolean ready;
 	private String roundStatus;
 
+
 	public Player(String nickname, int numberOfWins, String ticket) {
 		this.nickname = nickname;
 		this.numberOfWins = numberOfWins;

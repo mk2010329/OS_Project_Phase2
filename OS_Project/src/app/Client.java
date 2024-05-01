@@ -30,12 +30,21 @@ public class Client {
 				//entering your name
 				String userInput= from_user.readLine();
 				to_server.println(userInput);
-
-				while ((msg = from_server.readLine()) != null) {
-					System.out.println();
-					System.out.printf(msg);
-					}
 				
+//				while ((msg = from_server.readLine()) != null  ) {
+//					System.out.println();
+//					System.out.println(msg);
+//					}
+				for (int i=0 ; i<13;i++) {
+					msg = from_server.readLine();
+					if(msg!=null) {
+						System.out.println(msg);
+					}
+					else {
+						break;
+					}
+					
+				}
 				userInput= from_user.readLine();
 				to_server.println(userInput);
 			

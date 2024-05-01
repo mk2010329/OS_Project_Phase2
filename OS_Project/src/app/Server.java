@@ -75,7 +75,6 @@ public class Server {
 		new Thread(new Runnable() {
 			PrintWriter output;
 			BufferedReader fromClient;
-			StringBuilder sb = new StringBuilder();
 			@Override
 			public void run() {
 
@@ -101,8 +100,11 @@ public class Server {
 					output.println("All Players:");
 					output.println(listOfLoggedInPlayers.toString());
 					output.println("Join any game: ");
-					System.out.println(fromClient.readLine());
-					//System.out.println(ServerUtil.parseClient(fromClient.readLine()));
+//					output.close();
+					
+//					System.out.println(fromClient.readLine());
+			
+					ServerUtil.parseClient(fromClient.readLine());
 				//	Game game = new Game();
 					//game.listOfCurrentPlayers.add(player);
 //				

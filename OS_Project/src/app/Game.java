@@ -9,6 +9,7 @@ import java.util.ArrayList;
 //import java.util.Date;
 //import java.util.Optional;
 import java.util.Random;
+import java.util.concurrent.Semaphore;
 
 public class Game implements Runnable {
 	int roundNumber;
@@ -28,6 +29,9 @@ public class Game implements Runnable {
 	long newTime, diff;
 	String roundEndResults;
 	
+//	private final int maxNumOfPlayers=6;
+//	private final Semaphore semaphore;
+	
 	public Game() {
 			//	super();
 			roundNumber=0;
@@ -37,19 +41,20 @@ public class Game implements Runnable {
 	public Game(Socket nextClient) {
 	//	super();
 		this.nextClient = nextClient;
+		// semaphore = new Semaphore(maxNumOfPlayers);
 	}
 	
 	
 	// all game rules will be coded here
 	@Override
 	public void run() {
-		if(preGameLogicCheck()) {
+		//if(preGameLogicCheck()) {
 			try {
 				to_client = new PrintWriter(nextClient.getOutputStream(), true);
 				from_client = new BufferedReader(new InputStreamReader(nextClient.getInputStream()));
 				
 				while(true) {
-					if(diff > 60000) {
+					if(diff > 5000) {
 						to_client.println("You are done, n.o of correct trials = "+countTrials);
 						to_client.println("Done");
 						break;
@@ -61,7 +66,7 @@ public class Game implements Runnable {
 					
 					int serverSum = numb1 + numb2 + numb3;
 					
-					to_client.println("Enter the Sum of 3 numbers: "+numb1+" "+numb2+" "+numb3);
+					to_client.println("Enter the Sum of 3 numbers: "+numb1+" "+numb2+" "+numb3 + ": ");
 					
 					String userSum = from_client.readLine();
 					
@@ -94,7 +99,7 @@ public class Game implements Runnable {
 					e.printStackTrace();
 				}
 			}
-		}
+	//	}
 		
 	}
 	
@@ -269,5 +274,11 @@ public class Game implements Runnable {
 	public void setStarted(boolean isStarted) {
 		this.isStarted = isStarted;
 	}
+//	
+//	public boolean tryJoin(Socket nextClient) {
+//		boolean allow = semaphore.tryAcquire();
+//		if (allow)
+//			listOfCurrentPlayers.add(nextClient);
+//	}
 	
 }
