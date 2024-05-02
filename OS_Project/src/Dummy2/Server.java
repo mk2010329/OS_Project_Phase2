@@ -7,16 +7,16 @@ import java.util.*;
 public class Server {
 	
 	private static final int PORT = 13337;
-    private static List<Player> players = new ArrayList<>();
+    public static List<Player> players = new ArrayList<>();
     private static List<Game> games = new ArrayList<>();
     private static int ticketCounter = 1;
-
+    public static  Player player;
     public static void main(String[] args) {
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
             System.out.println("Server started. Listening on port " + PORT);
             while (true) {
                 Socket clientSocket = serverSocket.accept();
-                Player player = new Player(clientSocket);
+               player = new Player(clientSocket);
                 players.add(player);
                 new Thread(player).start();
             }

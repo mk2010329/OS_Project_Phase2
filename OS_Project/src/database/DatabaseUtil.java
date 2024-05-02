@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import Dummy2.Server;
 import app.Player;
 
 public class DatabaseUtil {
@@ -69,7 +70,7 @@ public class DatabaseUtil {
 	}
 
 	// checks if there exists a player record, and inserts if there is not
-	public static Player searchTicket(String queryTicket) throws ClassNotFoundException {
+	public static Dummy2.Player searchTicket(String queryTicket) throws ClassNotFoundException {
 		
 		String sql = "SELECT * FROM players WHERE ticket LIKE " + "'"+queryTicket+"'";
 		
@@ -81,9 +82,11 @@ public class DatabaseUtil {
 				String ticket = resultSet.getString(3);
 				int numberWins = resultSet.getInt(4);
 
-				Player player = new Player(nickname, numberWins, ticket);
+				Server.player.setNickname(nickname);
+				Server.player.setNumberOfWins(numberWins);
+				Server.player.setTicket(ticket_temp);
 				
-				return player;
+				return Server.player;
 			}
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
@@ -100,9 +103,11 @@ public class DatabaseUtil {
 				String ticket = resultSet.getString(3);
 				int numberWins = resultSet.getInt(4);
 
-				Player player = new Player(nickname, numberWins, ticket);
+				Server.player.setNickname(nickname);
+				Server.player.setNumberOfWins(numberWins);
+				Server.player.setTicket(ticket_temp);
 				
-				return player;
+				return Server.player;
 			}
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());

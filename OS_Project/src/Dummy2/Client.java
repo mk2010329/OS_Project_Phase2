@@ -20,15 +20,29 @@ public class Client {
 	            // Get ticket from server
 	            String from_Server = in.readLine();
 	            System.out.println(from_Server);
-
+	            
+	            System.out.println();
+                String command = scanner.nextLine();
+                out.println(command);
+                
+                String response;
+                for (int i=0 ; i<14;i++) {
+					 response = in.readLine();
+					if(response!=null) {
+						System.out.println(response);
+					}
+					else {
+						break;
+					}	
+				}
 	            // Handle user input and interaction with server
 	            while (true) {
 	               System.out.println();
-	                String command = scanner.nextLine();
+	                command = scanner.nextLine();
 	                out.println(command);
 
 	                // Handle server responses
-	                String response = in.readLine();
+	                 response = in.readLine();
 	                System.out.println("Server response: " + response);
 
 	                // Add more logic to handle other commands and responses
