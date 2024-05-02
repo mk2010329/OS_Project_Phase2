@@ -117,8 +117,8 @@ public class Player implements Runnable{
 	        			case "join"  : parseJoin(clientMsgArr[1]);break;
 //	        			case "ready" : return parseReady();
 //	        			case "guess" : return parseGuess(clientMsgArr[1]);
-//	        			case "chat"  : parseChat();break;
-	        			default: System.out.println("Command not recognized"); 
+	        			case "chat"  : parseChat(clientMsgArr[1]);break;
+	        			default: out.println("Command not recognized"); 
 	                }
 	            }
 	        } catch (IOException | ClassNotFoundException e) {
@@ -165,7 +165,7 @@ public class Player implements Runnable{
 				
 				if(game.getId()==(gameid)) { //matching the gameId
 					game.addPlayer(this);
-					out.println(this.getNickname() + " has joined the game "+ gameid);
+					out.println(this.getNickname() + " has joined game "+ gameid);
 					return ; 
 					}
 				
@@ -188,9 +188,10 @@ public class Player implements Runnable{
 //
 //		}
 //
-//		private static void parseChat() throws UnknownHostException, IOException {
-//
-//		}
+		private static void parseChat(String msg) throws UnknownHostException, IOException {
+			String message = " says: "+msg;
+			Dummy2.Server.broadcast(message);
+		}
 //		
 //		public static String getLeaderBoard() throws ClassNotFoundException {
 //			ArrayList<Dummy2.Player> leaderboardArr = DatabaseUtil.getTopFivePlayers();
@@ -199,5 +200,9 @@ public class Player implements Runnable{
 //						.reduce("", (acc, curr) -> acc + curr);
 //			return leaderboardString;
 //		}
+		
+		 public void sendMessage(String message) {
+		        out.println(message);
+		    }
 
 }
