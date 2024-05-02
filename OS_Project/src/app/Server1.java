@@ -4,10 +4,10 @@ import java.net.*;
 import java.io.*;
 import java.util.*;
 
-public class Server {
+public class Server1 {
 	
-	private static ArrayList<Game> listOfGames; //array list to store games
-	private static ArrayList<Player> listOfLoggedInPlayers; //array list to store Players
+	private static ArrayList<Game1> listOfGames; //array list to store games
+	private static ArrayList<Player1> listOfLoggedInPlayers; //array list to store Players
 	
 	public static void main(String args[]) {
 		try {
@@ -23,9 +23,9 @@ public class Server {
 			setListOfGames(new ArrayList<>()); //Initializing list of games array list
 			setListOfLoggedInPlayers(new ArrayList<>()); //Initializing list of Players array list
 			
-			Game g1 = new Game();
-			Game g2 = new Game();
-			Game g3 = new Game();
+			Game1 g1 = new Game1();
+			Game1 g2 = new Game1();
+			Game1 g3 = new Game1();
 			
 			g1.setGameId("game1");
 			g2.setGameId("game2");
@@ -44,7 +44,7 @@ public class Server {
 				System.out.println("Receiving Request From " +
 						nextClient.getInetAddress() + ":" +
 						nextClient.getPort());
-				Server.initialService(nextClient);
+				Server1.initialService(nextClient);
 				ServerUtil.nextClient=nextClient;
 				//				output.println();
 
@@ -54,21 +54,21 @@ public class Server {
 		}
 	}
 
-	public static ArrayList<Game> getListOfGames() {
+	public static ArrayList<Game1> getListOfGames() {
 		return listOfGames;
 	}
 
-	public static void setListOfGames(ArrayList<Game> listOfGames) {
-		Server.listOfGames = listOfGames;
+	public static void setListOfGames(ArrayList<Game1> listOfGames) {
+		Server1.listOfGames = listOfGames;
 	}
 	
 	 
-	public static ArrayList<Player> getListOfLoggedInPlayers() {
+	public static ArrayList<Player1> getListOfLoggedInPlayers() {
 		return listOfLoggedInPlayers;
 	}
 
-	public static void setListOfLoggedInPlayers(ArrayList<Player> listOfLoggedInPlayers) {
-		Server.listOfLoggedInPlayers = listOfLoggedInPlayers;
+	public static void setListOfLoggedInPlayers(ArrayList<Player1> listOfLoggedInPlayers) {
+		Server1.listOfLoggedInPlayers = listOfLoggedInPlayers;
 	}
 
 	private static void initialService(Socket nextClient) {
@@ -87,7 +87,7 @@ public class Server {
 					fromClient=new BufferedReader(new InputStreamReader(nextClient.getInputStream()));
 					
 					// parsing the input in ServerUtil
-					Player player = (Player) ServerUtil.parseClient(fromClient.readLine());
+					Player1 player = (Player1) ServerUtil.parseClient(fromClient.readLine());
 					listOfLoggedInPlayers.add(player);
 					
 					String welcomeMessage ="Welcome "+player.getNickname()+" Your ticket is " +player.getTicket();

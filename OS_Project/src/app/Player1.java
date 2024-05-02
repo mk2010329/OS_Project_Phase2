@@ -2,7 +2,7 @@
 
 package app;
 
-public class Player {
+public class Player1 {
 
 	private String nickname;
 	private int numberOfWins;
@@ -13,7 +13,7 @@ public class Player {
 	private String roundStatus;
 
 
-	public Player(String nickname, int numberOfWins, String ticket) {
+	public Player1(String nickname, int numberOfWins, String ticket) {
 		this.nickname = nickname;
 		this.numberOfWins = numberOfWins;
 		this.ticket = ticket;
@@ -21,7 +21,7 @@ public class Player {
 		this.ready=false;
 	}
 	
-	public Player(String nickname, int numberOfWins, String ticket, int gamePoints) {
+	public Player1(String nickname, int numberOfWins, String ticket, int gamePoints) {
 		this.nickname = nickname;
 		this.numberOfWins = numberOfWins;
 		this.ticket = ticket;

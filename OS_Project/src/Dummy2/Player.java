@@ -14,13 +14,6 @@ import database.DatabaseUtil;
 public class Player implements Runnable{
 		Game tempGameHolder;
 	 	private Socket socket;
-	    public Socket getSocket() {
-			return socket;
-		}
-
-		public void setSocket(Socket socket) {
-			this.socket = socket;
-		}
 
 		private BufferedReader in;
 	    private PrintWriter out;
@@ -45,7 +38,13 @@ public class Player implements Runnable{
 	            e.printStackTrace();
 	        }
 	    }
-	     
+	    public Socket getSocket() {
+	 			return socket;
+	 		}
+
+ 		public void setSocket(Socket socket) {
+ 			this.socket = socket;
+ 		}
 	    public int getTicket() {
 			return ticket;
 		}
@@ -222,8 +221,8 @@ public class Player implements Runnable{
 			for(Player player : tempGameHolder.getListofCurrentPlayers()) {
 				if(player==this) {
 					player.setGuess(Integer.parseInt(guess));
-					Game.listOfCurrentGuesses.add(player.getGuess());
-					tempGameHolder.getAverage(Game.listOfCurrentGuesses, player);
+					tempGameHolder.listOfCurrentGuesses.add(player.getGuess());
+					tempGameHolder.getAverage(tempGameHolder.listOfCurrentGuesses, player);
 //			System.out.println(tempGameHolder.listOfCurrentGuesses.get(0));
 		}
 	}

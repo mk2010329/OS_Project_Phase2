@@ -3,7 +3,7 @@ package app;
 import java.net.*;
 import java.io.*;
 
-public class Client {
+public class Client1 {
 	public static void main(String args[]) {
 		PrintWriter to_server;
 		BufferedReader from_server;

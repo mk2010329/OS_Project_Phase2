@@ -9,7 +9,7 @@ import java.util.Scanner;
 import database.DatabaseUtil;
 
 public class ServerUtil {
-	private static Player player;
+	private static Player1 player;
 	public static Socket nextClient;
 	public static Object parseClient(String clientMsg) throws ClassNotFoundException, UnknownHostException, IOException {
 		String [] clientMsgArr = clientMsg.split(" ");
@@ -26,14 +26,14 @@ public class ServerUtil {
 	}
 	
 	//processes pseudo command
-	private static Player parsePseudo(String [] clientMsgArr) throws ClassNotFoundException {
+	private static Player1 parsePseudo(String [] clientMsgArr) throws ClassNotFoundException {
 		player = DatabaseUtil.searchTicket(clientMsgArr[1]);
 		return player;//.getTicket()+"\nWelcome"+player.getNickname()
 	}
 	
 	//processes join command
-	private static Game parseJoin(String gameId) {
-		for(Game game:Server.getListOfGames()) { //iterating games
+	private static Game1 parseJoin(String gameId) {
+		for(Game1 game:Server1.getListOfGames()) { //iterating games
 			
 			if(game.getGameId().equals(gameId)) { //matching the gameId
 				
@@ -41,7 +41,7 @@ public class ServerUtil {
 					game.listOfCurrentPlayers.add(player); //adding player in game if players in game less than 7
 
 				}
-				Thread gameThread = new Thread(new Game(nextClient));
+				Thread gameThread = new Thread(new Game1(nextClient));
 				gameThread.start();
 				return game; // returning the game object
 			}
@@ -75,18 +75,18 @@ public class ServerUtil {
 	}
 	
 	public static String getLeaderBoard() throws ClassNotFoundException {
-		ArrayList<Player> leaderboardArr = DatabaseUtil.getTopFivePlayers();
+		ArrayList<Player1> leaderboardArr = DatabaseUtil.getTopFivePlayers();
 		String leaderboardString = leaderboardArr.stream()
 				.map(p -> p.printPlayer() + "\n")
 					.reduce("", (acc, curr) -> acc + curr);
 		return leaderboardString;
 	}
 
-	public Player getPlayer() {
+	public Player1 getPlayer() {
 		return player;
 	}
 
-	public void setPlayer(Player player) {
+	public void setPlayer(Player1 player) {
 		player = player;
 	}
 

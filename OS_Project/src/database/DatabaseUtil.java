@@ -8,7 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import Dummy2.Server;
-import app.Player;
+import app.Player1;
 
 public class DatabaseUtil {
 
@@ -127,9 +127,9 @@ public class DatabaseUtil {
 		
 	}
 	
-	public static ArrayList<Player> getTopFivePlayers() throws ClassNotFoundException {
+	public static ArrayList<Player1> getTopFivePlayers() throws ClassNotFoundException {
 		String sql = "SELECT * FROM players ORDER BY numberOfWins DESC LIMIT 5;";
-		ArrayList<Player> leaderboard = new ArrayList<>();
+		ArrayList<Player1> leaderboard = new ArrayList<>();
 		
 		try (Statement statement = DatabaseUtil.makeConnection().createStatement()) {	
 			ResultSet resultSet = statement.executeQuery(sql);
@@ -139,7 +139,7 @@ public class DatabaseUtil {
 				String ticket = resultSet.getString(3);
 				int numberWins = resultSet.getInt(4);
 
-				Player player = new Player(nickname, numberWins, ticket, numberWins);
+				Player1 player = new Player1(nickname, numberWins, ticket, numberWins);
 				leaderboard.add(player);
 			}
 			

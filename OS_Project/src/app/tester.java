@@ -4,7 +4,7 @@ public class tester {
 
 	public static void main(String[] args) {
 		
-		Game game = new Game();
+		Game1 game = new Game1();
 		game.listOfCurrentGuesses.add(1);
 		game.listOfCurrentGuesses.add(1);
 		game.listOfCurrentGuesses.add(3);

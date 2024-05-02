@@ -11,14 +11,14 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.Semaphore;
 
-public class Game implements Runnable {
+public class Game1 implements Runnable {
 	int roundNumber;
 	public  ArrayList<Integer> listOfCurrentGuesses = new ArrayList<>();
-	public ArrayList<Player> listOfCurrentPlayers = new ArrayList<>();
+	public ArrayList<Player1> listOfCurrentPlayers = new ArrayList<>();
 
 	private String gameName;
 
-	public ArrayList<Player> listOfDeadPlayers = new ArrayList<>();
+	public ArrayList<Player1> listOfDeadPlayers = new ArrayList<>();
 	private String gameId;
 	private boolean isStarted = false;
 	Socket nextClient;
@@ -32,13 +32,13 @@ public class Game implements Runnable {
 //	private final int maxNumOfPlayers=6;
 //	private final Semaphore semaphore;
 	
-	public Game() {
+	public Game1() {
 			//	super();
 			roundNumber=0;
 		}
 	
 	
-	public Game(Socket nextClient) {
+	public Game1(Socket nextClient) {
 	//	super();
 		this.nextClient = nextClient;
 		// semaphore = new Semaphore(maxNumOfPlayers);
@@ -128,11 +128,11 @@ public class Game implements Runnable {
 		
 		double target = (2.0 / 3.0) * getAverage();
         double minDifference = Double.MAX_VALUE;
-        ArrayList<Player> winners = new ArrayList<>();
+        ArrayList<Player1> winners = new ArrayList<>();
         
         //last round Logic
         if(listOfCurrentPlayers.size()==2) {
-        	for(Player player:listOfCurrentPlayers) {
+        	for(Player1 player:listOfCurrentPlayers) {
         		if(player.getGuess()==0) {
         			listOfCurrentPlayers.remove(player);
         			listOfDeadPlayers.add(player);
@@ -143,7 +143,7 @@ public class Game implements Runnable {
         }
         
         //game logic
-        for (Player player : listOfCurrentPlayers) {
+        for (Player1 player : listOfCurrentPlayers) {
             if(player.getGuess()>=0 && player.getGuess()<=100) {
             	double difference = Math.abs(target - player.getGuess());
                 if (difference < minDifference) {
@@ -159,14 +159,14 @@ public class Game implements Runnable {
         }
         
         decrementPoint(listOfCurrentPlayers);
-        for (Player player : listOfCurrentPlayers) {
+        for (Player1 player : listOfCurrentPlayers) {
             if(player.getGamePoints()==0) {
             	listOfCurrentPlayers.remove(player);
             	listOfDeadPlayers.add(player);
             }
         }
         
-        for (Player p : winners) {
+        for (Player1 p : winners) {
         	p.setNumberOfWins(p.getNumberOfWins()+1);
         	listOfCurrentPlayers.add(p);
         }
@@ -219,8 +219,8 @@ public class Game implements Runnable {
 	
 	
 	//decrements player points
-	public void decrementPoint(ArrayList<Player> player) {
-		for(Player p : player) {
+	public void decrementPoint(ArrayList<Player1> player) {
+		for(Player1 p : player) {
 			p.setGamePoints(p.getGamePoints()-1);
 		}
 	}
@@ -236,13 +236,13 @@ public class Game implements Runnable {
 		
 		
 		//point setting to 5
-		for(Player player:listOfCurrentPlayers) {
+		for(Player1 player:listOfCurrentPlayers) {
 			player.setGamePoints(5);
 		}
 		
 		
 		//all players should be ready
-		for(Player player:listOfCurrentPlayers) {
+		for(Player1 player:listOfCurrentPlayers) {
 			if(!player.isReady()) {
 				return false;
 			}
