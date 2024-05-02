@@ -12,9 +12,17 @@ import chat.Client;
 import database.DatabaseUtil;
 
 public class Player implements Runnable{
-	
-	 private Socket socket;
-	    private BufferedReader in;
+		Game tempGameHolder;
+	 	private Socket socket;
+	    public Socket getSocket() {
+			return socket;
+		}
+
+		public void setSocket(Socket socket) {
+			this.socket = socket;
+		}
+
+		private BufferedReader in;
 	    private PrintWriter out;
 	    private int ticket;
 	    static Player player;
@@ -115,9 +123,9 @@ public class Player implements Runnable{
 	        		switch(clientMsgArr[0].toLowerCase()) {
 	        			case "pseudo": parsePseudo(clientMsgArr);break;
 	        			case "join"  : parseJoin(clientMsgArr[1]);break;
-//	        			case "ready" : return parseReady();
-//	        			case "guess" : return parseGuess(clientMsgArr[1]);
-	        			case "chat"  : parseChat(clientMsgArr[1]);break;
+	        			case "ready" : parseReady();break;
+	        			case "guess" : parseGuess(clientMsgArr[1]);break;
+//	        			case "chat"  : parseChat();break;
 	        			default: out.println("Command not recognized"); 
 	                }
 	            }
@@ -145,7 +153,7 @@ public class Player implements Runnable{
 	    }
 	
 //		//processes pseudo command
-		private  void parsePseudo(String [] clientMsgArr) throws ClassNotFoundException {
+		private void parsePseudo(String [] clientMsgArr) throws ClassNotFoundException {
 			player = DatabaseUtil.searchTicket(clientMsgArr[1]);
 			out.println("Welcome "+player.getNickname()+"\nYour ticket is "+player.getTicketString()); 
 			out.println("Leaderboard:");
@@ -158,35 +166,70 @@ public class Player implements Runnable{
 		}
 		
 //		//processes join command
-		private void parseJoin(String gameId) {
+		private void parseJoin(String gameId) throws IOException {
 			int gameid =Integer.parseInt(gameId);
 			 List<Dummy2.Game> games = Dummy2.Server.getGames();
 			for(Dummy2.Game game: games) { //iterating games
 				
 				if(game.getId()==(gameid)) { //matching the gameId
+					//System.out.println(game.hashCode());
+					tempGameHolder = game;
 					game.addPlayer(this);
-					out.println(this.getNickname() + " has joined game "+ gameid);
-					return ; 
+					out.println("This message is sent by game: " + 
+			    			game.getListofCurrentPlayers().stream().map(p-> p.getNickname()+" ")
+			    			.reduce("", (acc, curr)-> acc + curr));
+					/*this.getNickname() + " has joined the game "+ gameid*/
+					return; 
+
 					}
 				
 				}
 			out.println("Game not found!"); // failed to find game in list of games returns null
 
 		}
-//		
+		
 //		//processes ready command
-//		private static String parseReady() {
-//			this.setReady(true);
-//			return player.getTicket()+" is ready";
-//		}
+		private void parseReady() throws IOException {
+			this.ready=true;
+			int readyCounter=0;
+			for(Player player:tempGameHolder.getListofCurrentPlayers()) {
+				if(player.ready) {
+					readyCounter++;
+				}
+			}
+			//
+			if(readyCounter==tempGameHolder.getListofCurrentPlayers().size()&&tempGameHolder.getListofCurrentPlayers().size()>=1) {
+				tempGameHolder.start();
+			}
+
+//			if(game.getId()==(gameid)) { //matching the gameId
+//				game.addPlayer(this);
+//				out.println("This message is sent by game: " + 
+//		    			game.getListofCurrentPlayers().stream().map(p-> p.getNickname()+" ")
+//		    			.reduce("", (acc, curr)-> acc + curr));
+//				/*this.getNickname() + " has joined the game "+ gameid*/
+//				game.start();
+//				return ; 
+//				}
+//			
+//			}
+			
+			
+		}
 //		
-//		
-//		private static int parseGuess(String guess) {
-//			player.setGuess(Integer.parseInt(guess));
-//
-//			return Integer.parseInt(guess);
-//
-//		}
+//	
+		private void parseGuess(String guess) {
+			for(Player player : tempGameHolder.getListofCurrentPlayers()) {
+				if(player==this) {
+					player.setGuess(Integer.parseInt(guess));
+					Game.listOfCurrentGuesses.add(player.getGuess());
+//			System.out.println(tempGameHolder.listOfCurrentGuesses.get(0));
+		}
+	}
+
+			
+
+		}
 //
 		private static void parseChat(String msg) throws UnknownHostException, IOException {
 			String message = " says: "+msg;

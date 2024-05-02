@@ -25,7 +25,7 @@ public class Server {
             while (true) {
                 Socket clientSocket = serverSocket.accept();
                player = new Player(clientSocket);
-               
+            
                players.add(player);
                 
                new Thread(player).start();
@@ -35,6 +35,7 @@ public class Server {
         }
     }
 
+    
 //    public static synchronized int generateTicket() {
 //        return ticketCounter++;
 //    }
