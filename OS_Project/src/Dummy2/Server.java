@@ -17,8 +17,19 @@ public class Server {
             while (true) {
                 Socket clientSocket = serverSocket.accept();
                player = new Player(clientSocket);
-                players.add(player);
-                new Thread(player).start();
+               
+               Game game1 = new Game();
+               Game game2 = new Game();
+               Game game3 = new Game();
+               
+               //adding games to the list
+               addGame(game1);
+               addGame(game2);
+               addGame(game3);
+               
+               players.add(player);
+                
+               new Thread(player).start();
             }
         } catch (IOException e) {
             e.printStackTrace();

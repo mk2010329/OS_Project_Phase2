@@ -18,8 +18,14 @@ public class Game {
 	    public int getId() {
 	        return id;
 	    }
+	    
+	    
+	    @Override
+		public String toString() {
+			return "Game [id=" + id + "]";
+		}
 
-	    public synchronized void addPlayer(Player player) {
+		public synchronized void addPlayer(Player player) {
 	        players.add(player);
 	    }
 

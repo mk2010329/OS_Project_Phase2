@@ -151,7 +151,7 @@ public class Player implements Runnable{
 			out.println("Leaderboard:");
 			out.println(ServerUtil.getLeaderBoard());
 			out.println("Games available:");
-			out.println(Server.getGames());
+			out.println(Server.getGames().toString());
 			out.println("All Players:");
 			out.println(Server.players.toString());
 			out.println("Join any game: ");
@@ -165,6 +165,7 @@ public class Player implements Runnable{
 				
 				if(game.getId()==(gameid)) { //matching the gameId
 					game.addPlayer(this);
+					out.println(this.getNickname() + " has joined the game "+ gameid);
 					return ; 
 					}
 				
