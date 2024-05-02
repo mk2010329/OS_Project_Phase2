@@ -26,6 +26,11 @@ public class Game {
 	    public synchronized void removePlayer(Player player) {
 	        players.remove(player);
 	    }
+	    
+	    public synchronized void start() {
+	        // Implement game start logic
+	        // For example, start round, send initial messages, etc.
+	    }
 
 	    // Other game methods...
 
