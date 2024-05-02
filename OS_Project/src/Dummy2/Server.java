@@ -26,7 +26,7 @@ public class Server {
                addGame(game1);
                addGame(game2);
                addGame(game3);
-               
+               //System.out.println(game1.hashCode());
                players.add(player);
                 
                new Thread(player).start();
@@ -36,6 +36,7 @@ public class Server {
         }
     }
 
+    
 //    public static synchronized int generateTicket() {
 //        return ticketCounter++;
 //    }
