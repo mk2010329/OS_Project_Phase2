@@ -218,11 +218,12 @@ public class Player implements Runnable{
 		}
 //		
 //	
-		private void parseGuess(String guess) {
+		private void parseGuess(String guess) throws IOException {
 			for(Player player : tempGameHolder.getListofCurrentPlayers()) {
 				if(player==this) {
 					player.setGuess(Integer.parseInt(guess));
 					Game.listOfCurrentGuesses.add(player.getGuess());
+					tempGameHolder.getAverage(Game.listOfCurrentGuesses, player);
 //			System.out.println(tempGameHolder.listOfCurrentGuesses.get(0));
 		}
 	}

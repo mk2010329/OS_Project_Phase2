@@ -56,12 +56,6 @@ public class Game {
 		    			new BufferedReader(new InputStreamReader
 		    					(player.getSocket().getInputStream()));
 	    	}
-	    	for(Player player: listofCurrentPlayers) {
-	    		output = new PrintWriter(player.getSocket().getOutputStream(), true);
-	    		sum = listOfCurrentGuesses.stream()
-		    			.reduce(0, (acc,curr) -> acc+=curr);
-		    	output.println("SUM = "+player.getGuess());
-	    	}
 	    	
 	    	
 	    	/*sum = listOfCurrentGuesses.stream()
@@ -70,7 +64,16 @@ public class Game {
 	    	
 	    	
 	    }
-
+	    public synchronized void getAverage(List<Integer> guesses, Player player) throws IOException {
+	    	
+			double sum = guesses.stream().reduce(0, (acc , curr)-> acc +=curr);
+			double average=  sum/guesses.size();
+			PrintWriter output = new PrintWriter(player.getSocket().getOutputStream(), true);
+			output.println("Your average: "+ average);
+			
+		}
+		
+	    
 		public List<Player> getListofCurrentPlayers() {
 			return listofCurrentPlayers;
 		}
@@ -91,6 +94,7 @@ public class Game {
 			this.id = id;
 		}
 
+			
 
 	    // Other game methods...
 
