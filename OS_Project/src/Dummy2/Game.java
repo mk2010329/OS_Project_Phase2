@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import app.Player1;
 
@@ -23,6 +24,8 @@ public class Game {
 	        id = idCounter++;
 			listofCurrentPlayers = new ArrayList<>();
 			listOfCurrentGuesses = new ArrayList<>();
+			winners = new ArrayList<>();
+		    listOfDeadPlayers = new ArrayList<>();
 	        roundNumber = 0;
 	    }
 
@@ -49,64 +52,72 @@ public class Game {
 	    }
 
 	    public synchronized void start() throws IOException {
-	    	int sum = 0;
-	        // Implement game start logic
-	        // For example, start round, send initial messages, etc.
-	    	BufferedReader fromClient;
-	    	PrintWriter output ;
-	    	for (Player player: listofCurrentPlayers) {
-	    		output = new PrintWriter(player.getSocket().getOutputStream(), true);
-		    	output.println("GAME HAS STARTED,Guess a Number between 0 and 100: ");
-		    	fromClient =
-		    			new BufferedReader(new InputStreamReader
-		    					(player.getSocket().getInputStream()));
-	    	}
 	    	
-	    	
-	    	/*sum = listOfCurrentGuesses.stream()
-			    			.reduce(0, (acc,curr) -> acc+=curr);
-			    	output.println("SUM = "+player.getGuess());*/
+	    	 for (Player player : listofCurrentPlayers) {
+	             PrintWriter output = new PrintWriter(player.getSocket().getOutputStream(), true);
+	             output.println("GAME HAS STARTED. Guess a number between 0 and 100: ");
+	         }
 	    	
 	    	
 	    }
-	    public synchronized void getAverage(List<Integer> guesses, Player player) throws IOException {
+	    public synchronized void getAverage(int guess, Player player) throws IOException {
 	    	
-			double sum = guesses.stream().reduce(0, (acc , curr)-> acc +=curr);
-			double average=  sum/guesses.size();
-			roundWinnerLogic(average,player);
-			
+	    	 addGuess(guess);
+
+	         if (listOfCurrentGuesses.size() == listofCurrentPlayers.size()) {
+	        	 roundNumber++;
+	             calculateWinners();
+	             sendRoundResults();  
+	         }
 		}
+	    
+	    private void sendRoundResults() throws IOException {
+	        // Construct and send round results to all players
+	        String roundResults = "game round " + roundNumber + " ";
+	        // Add player nicknames
+	        roundResults += listofCurrentPlayers.stream()
+	                                            .map(Player::getNickname)
+	                                            .collect(Collectors.joining(",")) + " ";
+	        // Add guesses
+	        roundResults += listOfCurrentGuesses.stream()
+	                                            .map(Object::toString)
+	                                            .collect(Collectors.joining(",")) + " ";
+	        // Add win/lose status
+	        roundResults += listofCurrentPlayers.stream()
+	                                            .map(p -> p.getRoundStatus().toLowerCase())
+	                                            .collect(Collectors.joining(","));
+	        
+	        //sending the output to all players in the game
+	        for (Player player : listofCurrentPlayers) {
+	            PrintWriter output = new PrintWriter(player.getSocket().getOutputStream(), true);
+	            output.println(roundResults);
+	        }
+	    }
 		
-	    public void roundWinnerLogic(double average, Player plyr) throws IOException {
-			
-			//Round End Report Work
-			String roundEndResults="game round: "+(roundNumber++)+" ";
-			for(int i=0;i<listofCurrentPlayers.size();i++) {
-				if(i!=listofCurrentPlayers.size()-1) {
-					roundEndResults.concat(listofCurrentPlayers.get(i).getNickname()+", ");
-				}
-				else {
-					roundEndResults.concat(listofCurrentPlayers.get(i).getNickname()+" ");
-				}
-			}
-			
+	    public void calculateWinners() throws IOException {
+	    	
+	    	double sum = listOfCurrentGuesses.stream().reduce(0, (acc, curr) -> acc + curr);
+			double average=  sum/listOfCurrentGuesses.size();
 			double target = (2.0 / 3.0) * average;
 	        double minDifference = Double.MAX_VALUE;
-	        ArrayList<Player> winners = new ArrayList<>();
-	        
-	        //last round Logic
+	       
+	      
+	      //last round Logic
 	        if(listofCurrentPlayers.size()==2) {
-	        	for(Player player:listofCurrentPlayers) {
-	        		if(player.getGuess()==0) {
-	        			listofCurrentPlayers.remove(player);
-	        			listOfDeadPlayers.add(player);
-	        			winners.add(listofCurrentPlayers.get(0));
-	        			return;
+	        	  for (Iterator<Player> iterator = listofCurrentPlayers.iterator(); iterator.hasNext();) {
+	                  Player player = iterator.next();
+	                  if (player.getGuess() == 0) {
+	                	  player.setRoundStatus("lose");
+	                      iterator.remove();
+	                      listOfDeadPlayers.add(player);
+	                      winners.add(listofCurrentPlayers.get(0));
+	                      return;
 	        		}
 	        	}
 	        }
+	        
 	        //game logic
-	        for (Player player : listofCurrentPlayers) {
+	        for (Player player : new ArrayList<>(listofCurrentPlayers)) {
 	            if(player.getGuess()>=0 && player.getGuess()<=100) {
 	            	double difference = Math.abs(target - player.getGuess());
 	                if (difference < minDifference) {
@@ -117,8 +128,6 @@ public class Game {
 	                } else if (difference == minDifference) {
 	                    winners.add(player);
 	                    listofCurrentPlayers.remove(player);
-	                }else{
-	                	listOfDeadPlayers.add(player);
 	                }
 	            }
 	        }
@@ -126,9 +135,8 @@ public class Game {
 	        decrementPoint(listofCurrentPlayers);
 	        for (Player player : listofCurrentPlayers) {
 	            if(player.getGamePoints()==0) {
-	            	player.setRoundStatus("lose");
 	            	listofCurrentPlayers.remove(player);
-	            	
+	            	listOfDeadPlayers.add(player);
 	            }
 	        }
 	        
@@ -138,55 +146,14 @@ public class Game {
 	        	listofCurrentPlayers.add(p);
 	        }
 	        
-	      //Round End Report Work 2
-	      	for(int i=0;i<listofCurrentPlayers.size();i++) {
-	      		if(i!=listofCurrentPlayers.size()-1) {
-	      			roundEndResults.concat(listofCurrentPlayers.get(i).getGuess()+", ");
-	      		}
-	      		else {
-	      			roundEndResults.concat(listofCurrentPlayers.get(i).getGuess()+" ");
-	      		}
-	      	}
-	        
-	        //Round End Report Work 3
-	      	for(int i=0;i<listofCurrentPlayers.size();i++) {
-	      		if(i!=listofCurrentPlayers.size()-1) {
-	      			roundEndResults.concat(listofCurrentPlayers.get(i).getGamePoints()+", ");
-	      		}
-	      		else {
-	      			roundEndResults.concat(listofCurrentPlayers.get(i).getGamePoints()+" ");
-	      		}
-	      	}
-	      	
-	        //Round End Report Work 3
-	      	for(int i=0;i<listofCurrentPlayers.size();i++) {
-	      		if(i!=listofCurrentPlayers.size()-1) {
-	      			roundEndResults.concat(listofCurrentPlayers.get(i).getRoundStatus()+", ");
-	      		}
-	      		else {
-	      			roundEndResults.concat(listofCurrentPlayers.get(i).getRoundStatus());
-	      		}
-	      	}
-	      	if(!listOfDeadPlayers.isEmpty()) {
-	      		roundEndResults.concat(" Eliminated Player(s): ");
-	      		for(int i=0;i<listOfDeadPlayers.size();i++) {
-	          		if(i!=listOfDeadPlayers.size()-1) {
-	          			roundEndResults.concat(listOfDeadPlayers.get(i).getNickname()+", ");
-	          		}
-	          		else {
-	          			roundEndResults.concat(listOfDeadPlayers.get(i).getNickname());
-	          		}
-	          	}
-	      	}
-
-	      //	System.out.println(roundEndResults);
-	      	PrintWriter output = new PrintWriter(plyr.getSocket().getOutputStream(), true);
-			output.println(roundEndResults);
 	    }
+	    
+	    
       //decrements player points
     	public void decrementPoint(List<Player> player) {
     		for(Player p : player) {
     			p.setGamePoints(p.getGamePoints()-1);
+    			p.setRoundStatus("lose");
     		}
     	}
     	

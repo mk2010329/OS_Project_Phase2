@@ -34,6 +34,7 @@ public class Player implements Runnable{
 	            out = new PrintWriter(socket.getOutputStream(), true);
 //	            ticket = Server.generateTicket();
 	            out.println("Identify Yourself: ");
+	            setRoundStatus("lose");
 	        } catch (IOException e) {
 	            e.printStackTrace();
 	        }
@@ -139,17 +140,6 @@ public class Player implements Runnable{
 	            }
 	        }
 	    }
-
-	    private void joinGame(int gameId) {
-	        List<Game> games = Server.getGames();
-	        for (Game game : games) {
-	            if (game.getId() == gameId) {
-	                game.addPlayer(this);
-	                return;
-	            }
-	        }
-	        out.println("Game not found!");
-	    }
 	
 //		//processes pseudo command
 		private void parsePseudo(String [] clientMsgArr) throws ClassNotFoundException {
@@ -181,7 +171,6 @@ public class Player implements Runnable{
 					return; 
 
 					}
-				
 				}
 			out.println("Game not found!"); // failed to find game in list of games returns null
 
@@ -197,7 +186,8 @@ public class Player implements Runnable{
 				}
 			}
 			//
-			if(readyCounter==tempGameHolder.getListofCurrentPlayers().size()&&tempGameHolder.getListofCurrentPlayers().size()>=1) {
+			if(readyCounter==tempGameHolder.getListofCurrentPlayers().size()
+					&&tempGameHolder.getListofCurrentPlayers().size()>=1) {
 				tempGameHolder.start();
 			}
 
@@ -220,15 +210,12 @@ public class Player implements Runnable{
 		private void parseGuess(String guess) throws IOException {
 			for(Player player : tempGameHolder.getListofCurrentPlayers()) {
 				if(player==this) {
-					player.setGuess(Integer.parseInt(guess));
-					tempGameHolder.listOfCurrentGuesses.add(player.getGuess());
-					tempGameHolder.getAverage(tempGameHolder.listOfCurrentGuesses, player);
+					int playerGuess = Integer.parseInt(guess);
+					player.setGuess(playerGuess);
+					tempGameHolder.getAverage(playerGuess, player);
 //			System.out.println(tempGameHolder.listOfCurrentGuesses.get(0));
-		}
-	}
-
-			
-
+				}
+			}
 		}
 //
 		private static void parseChat(String msg) throws UnknownHostException, IOException {
