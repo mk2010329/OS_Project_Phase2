@@ -80,8 +80,8 @@ public class Game {
 	                                            .map(Player::getNickname)
 	                                            .collect(Collectors.joining(",")) + " ";
 	        // Add guesses
-	        roundResults += listOfCurrentGuesses.stream()
-	                                            .map(Object::toString)
+	        roundResults += listofCurrentPlayers.stream()
+	                                            .map(p -> Integer.toString(p.getGuess()))
 	                                            .collect(Collectors.joining(",")) + " ";
 	        //Add points
 	        roundResults += listofCurrentPlayers.stream()
@@ -98,6 +98,7 @@ public class Game {
 	            PrintWriter output = new PrintWriter(player.getSocket().getOutputStream(), true);
 	            output.println(roundResults);
 	        }
+	        
 	    }
 		
 	    public void calculateWinners() throws IOException, ClassNotFoundException {
@@ -111,12 +112,8 @@ public class Game {
 	        if(listofCurrentPlayers.size()==1) {
 	        	DatabaseUtil.incrementPlayerNumberOfWins(listofCurrentPlayers.get(0).getTicket());
 	        	listofCurrentPlayers.clear();
-	        	
-	        	for(int i =0; i<12;i++) {
-	        		Player.initialMessage();
-	        	}
-	        	
 	        }
+	        System.out.println(listofCurrentPlayers);
 	      
 	      //last round Logic
 	        if(listofCurrentPlayers.size()==2) {

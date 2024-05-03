@@ -1,5 +1,6 @@
 package Dummy2;
 
+import java.awt.dnd.DropTargetListener;
 import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -16,7 +17,7 @@ public class Player implements Runnable{
 	 	private Socket socket;
 
 		private BufferedReader in;
-	    private static PrintWriter out;
+	    private PrintWriter out;
 	    private String ticket;
 	    static Player player;
 	    
@@ -142,7 +143,7 @@ public class Player implements Runnable{
 	    }
 	
 //		//processes pseudo command
-		private static void parsePseudo(String [] clientMsgArr) throws ClassNotFoundException {
+		private void parsePseudo(String [] clientMsgArr) throws ClassNotFoundException {
 			 player = DatabaseUtil.searchTicket(clientMsgArr[1]);
 			out.println("Welcome "+player.getNickname()+"\nYour ticket is "+player.getTicket());
 			initialMessage();
@@ -162,6 +163,7 @@ public class Player implements Runnable{
 					out.println("This message is sent by game: " + 
 			    			game.getListofCurrentPlayers().stream().map(p-> p.getNickname()+" ")
 			    			.reduce("", (acc, curr)-> acc + curr));
+					
 					/*this.getNickname() + " has joined the game "+ gameid*/
 					return; 
 
@@ -182,7 +184,7 @@ public class Player implements Runnable{
 			}
 			//
 			if(readyCounter==tempGameHolder.getListofCurrentPlayers().size()
-					&&tempGameHolder.getListofCurrentPlayers().size()>=2) {
+					&&tempGameHolder.getListofCurrentPlayers().size()>=1) {
 				tempGameHolder.start();
 			}
 
@@ -229,7 +231,7 @@ public class Player implements Runnable{
 		 public void sendMessage(String message) {
 		        out.println(message);
 		    }
-		 public static void initialMessage() throws ClassNotFoundException {
+		 public  void initialMessage() throws ClassNotFoundException {
 				out.println("Leaderboard:");
 				out.println(ServerUtil.getLeaderBoard());
 				out.println("Games available:");
