@@ -8,6 +8,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import app.Player1;
+import database.DatabaseUtil;
 
 
 public class Game {
@@ -60,7 +61,7 @@ public class Game {
 	    	
 	    	
 	    }
-	    public synchronized void getAverage(int guess, Player player) throws IOException {
+	    public synchronized void getAverage(int guess, Player player) throws IOException, ClassNotFoundException {
 	    	
 	    	 addGuess(guess);
 
@@ -82,6 +83,11 @@ public class Game {
 	        roundResults += listOfCurrentGuesses.stream()
 	                                            .map(Object::toString)
 	                                            .collect(Collectors.joining(",")) + " ";
+	        //Add points
+	        roundResults += listofCurrentPlayers.stream()
+                    .map(p -> Integer.toString(p.getGamePoints()))
+                    .collect(Collectors.joining(",")) + " ";
+	        
 	        // Add win/lose status
 	        roundResults += listofCurrentPlayers.stream()
 	                                            .map(p -> p.getRoundStatus().toLowerCase())
@@ -94,13 +100,23 @@ public class Game {
 	        }
 	    }
 		
-	    public void calculateWinners() throws IOException {
+	    public void calculateWinners() throws IOException, ClassNotFoundException {
 	    	
 	    	double sum = listOfCurrentGuesses.stream().reduce(0, (acc, curr) -> acc + curr);
 			double average=  sum/listOfCurrentGuesses.size();
 			double target = (2.0 / 3.0) * average;
 	        double minDifference = Double.MAX_VALUE;
 	       
+	        //last player left logic
+	        if(listofCurrentPlayers.size()==1) {
+	        	DatabaseUtil.incrementPlayerNumberOfWins(listofCurrentPlayers.get(0).getTicket());
+	        	listofCurrentPlayers.clear();
+	        	
+	        	for(int i =0; i<12;i++) {
+	        		Player.initialMessage();
+	        	}
+	        	
+	        }
 	      
 	      //last round Logic
 	        if(listofCurrentPlayers.size()==2) {
@@ -141,13 +157,11 @@ public class Game {
 	        }
 	        
 	        for (Player p : winners) {
-	        	p.setNumberOfWins(p.getNumberOfWins()+1);
 	        	p.setRoundStatus("win");
 	        	listofCurrentPlayers.add(p);
 	        }
 	        
 	    }
-	    
 	    
       //decrements player points
     	public void decrementPoint(List<Player> player) {

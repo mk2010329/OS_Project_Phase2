@@ -84,7 +84,7 @@ public class DatabaseUtil {
 
 				Server.player.setNickname(nickname);
 				Server.player.setNumberOfWins(numberWins);
-				Server.player.setTicket(ticket_temp);
+				Server.player.setTicket(ticket);
 				
 				return Server.player;
 			}
@@ -105,7 +105,7 @@ public class DatabaseUtil {
 
 				Server.player.setNickname(nickname);
 				Server.player.setNumberOfWins(numberWins);
-				Server.player.setTicket(ticket_temp);
+				Server.player.setTicket(ticket);
 				
 				return Server.player;
 			}

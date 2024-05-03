@@ -23,7 +23,7 @@ public class Server {
             addGame(game2);
             addGame(game3);
             while (true) {
-                Socket clientSocket = serverSocket.accept();
+               Socket clientSocket = serverSocket.accept();
                player = new Player(clientSocket);
             
                players.add(player);

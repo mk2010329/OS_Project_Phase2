@@ -16,8 +16,8 @@ public class Player implements Runnable{
 	 	private Socket socket;
 
 		private BufferedReader in;
-	    private PrintWriter out;
-	    private int ticket;
+	    private static PrintWriter out;
+	    private String ticket;
 	    static Player player;
 	    
 	    private String nickname;
@@ -46,14 +46,14 @@ public class Player implements Runnable{
  		public void setSocket(Socket socket) {
  			this.socket = socket;
  		}
-	    public int getTicket() {
+	    public String getTicket() {
 			return ticket;
 		}
 	    
 	    public String getTicketString() {
 			return getTicket()+getNickname();
 		}
-		public void setTicket(int ticket) {
+		public void setTicket(String ticket) {
 			this.ticket = ticket;
 		}
 
@@ -142,16 +142,10 @@ public class Player implements Runnable{
 	    }
 	
 //		//processes pseudo command
-		private void parsePseudo(String [] clientMsgArr) throws ClassNotFoundException {
-			player = DatabaseUtil.searchTicket(clientMsgArr[1]);
-			out.println("Welcome "+player.getNickname()+"\nYour ticket is "+player.getTicketString()); 
-			out.println("Leaderboard:");
-			out.println(ServerUtil.getLeaderBoard());
-			out.println("Games available:");
-			out.println(Server.getGames().toString());
-			out.println("All Players:");
-			out.println(Server.players.toString());
-			out.println("Join any game: ");
+		private static void parsePseudo(String [] clientMsgArr) throws ClassNotFoundException {
+			 player = DatabaseUtil.searchTicket(clientMsgArr[1]);
+			out.println("Welcome "+player.getNickname()+"\nYour ticket is "+player.getTicket());
+			initialMessage();
 		}
 		
 //		//processes join command
@@ -164,6 +158,7 @@ public class Player implements Runnable{
 					//System.out.println(game.hashCode());
 					tempGameHolder = game;
 					game.addPlayer(this);
+					this.setGamePoints(5);
 					out.println("This message is sent by game: " + 
 			    			game.getListofCurrentPlayers().stream().map(p-> p.getNickname()+" ")
 			    			.reduce("", (acc, curr)-> acc + curr));
@@ -187,7 +182,7 @@ public class Player implements Runnable{
 			}
 			//
 			if(readyCounter==tempGameHolder.getListofCurrentPlayers().size()
-					&&tempGameHolder.getListofCurrentPlayers().size()>=1) {
+					&&tempGameHolder.getListofCurrentPlayers().size()>=2) {
 				tempGameHolder.start();
 			}
 
@@ -207,7 +202,7 @@ public class Player implements Runnable{
 		}
 //		
 //	
-		private void parseGuess(String guess) throws IOException {
+		private void parseGuess(String guess) throws IOException, ClassNotFoundException {
 			for(Player player : tempGameHolder.getListofCurrentPlayers()) {
 				if(player==this) {
 					int playerGuess = Integer.parseInt(guess);
@@ -234,5 +229,14 @@ public class Player implements Runnable{
 		 public void sendMessage(String message) {
 		        out.println(message);
 		    }
-
+		 public static void initialMessage() throws ClassNotFoundException {
+				out.println("Leaderboard:");
+				out.println(ServerUtil.getLeaderBoard());
+				out.println("Games available:");
+				out.println(Server.getGames().toString());
+				out.println("All Players:");
+				out.println(Server.players.toString());
+				out.println("Join any game: ");
+				out.println("END_OF_TRANS");
+		 }
 }
