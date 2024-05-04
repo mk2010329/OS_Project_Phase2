@@ -20,6 +20,7 @@ public class Server {
             
             //adding games to the list
             addGame(game1);
+            
             addGame(game2);
             addGame(game3);
             while (true) {

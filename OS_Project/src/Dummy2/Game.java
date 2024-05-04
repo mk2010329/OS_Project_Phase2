@@ -1,19 +1,19 @@
 package Dummy2;
 
-import java.io.BufferedReader;
+
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.*;
+import java.util.concurrent.Semaphore;
 import java.util.stream.Collectors;
 
-import app.Player1;
 import database.DatabaseUtil;
 
 
 public class Game {
 	
 	 private static int idCounter = 1;
+	 	private Semaphore sem;
 	    private int id;
 	    private List<Player> listofCurrentPlayers;
 	    private List<Player> roundLosers;
@@ -24,6 +24,7 @@ public class Game {
 	    public  List<Integer> listOfCurrentGuesses ;
 
 	    public Game() {
+	    	sem = new Semaphore(1);
 	        id = idCounter++;
 			listofCurrentPlayers = new ArrayList<>();
 			listOfCurrentGuesses = new ArrayList<>();
@@ -55,12 +56,13 @@ public class Game {
 	        listOfCurrentGuesses.add(guess);
 	    }
 	    
-	    public synchronized void start() throws IOException {
+	    public synchronized void start() throws IOException, InterruptedException {
+	    	sem.acquire();
 	    	 roundNumber++;
 	    	 players = new ArrayList<>(this.listofCurrentPlayers);
 	    	 for (Player player :players) {
 	             PrintWriter output = new PrintWriter(player.getSocket().getOutputStream(), true);
-	             output.println("Round "+roundNumber+ ". Guess a number between 0 and 100: ");
+	             output.println("Round "+roundNumber+". Guess a number between 0 and 100: ");
 	         }
 	    	
 	    	
@@ -111,17 +113,11 @@ public class Game {
 			double target = (2.0 / 3.0) * average;
 	        double minDifference = Double.MAX_VALUE;
 	        
-	        for (Player player :listofCurrentPlayers) {
+	        for (Player player :players) {
+	        	player.setRoundStatus("lose");
 	        	player.setReady(false);
 	        }
 	       
-	        //last player left logic
-	        if(players.size()==1) {
-	        	DatabaseUtil.incrementPlayerNumberOfWins(players.get(0).getTicket());
-	        	listofCurrentPlayers.clear();
-	        	players.clear();
-	        }
-	        
 	      //last round Logic
 	        if(players.size()==2) {
 	        	  for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
@@ -153,16 +149,35 @@ public class Game {
 	        }
 	        
 	        decrementPoint(players);
-	        for (Player player : players) {
-	            if(player.getGamePoints()==0) {
-	            	players.remove(player);
-	            	listOfDeadPlayers.add(player);
-	            }
+	        if(players.size()!=1) {
+	        	for (Player player : players) {
+		            if(player.getGamePoints()==0) {
+		            	listOfDeadPlayers.add(player);
+		            	players.remove(player);
+		            }
+		        }
+	        }
+	        else {
+	        	if(players.get(0).getGamePoints()==0) {
+	        		listOfDeadPlayers.add(players.get(0));
+	        	}
 	        }
 	        
 	        for (Player p : winners) {
+	        	if(players.size()==1) {
+	        		players.clear();
+	        	}
 	        	p.setRoundStatus("win");
 	        	players.add(p);
+	        }
+	        
+	        //last player left logic
+	        if(players.size()==1) {
+	        	DatabaseUtil.incrementPlayerNumberOfWins(players.get(0).getTicket());
+//	        	listofCurrentPlayers.clear();
+	        	players.clear();
+	        	sem.release();
+	        	return;
 	        }
 	        
 	    }

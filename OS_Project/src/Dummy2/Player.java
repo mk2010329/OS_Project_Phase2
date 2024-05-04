@@ -13,18 +13,21 @@ import chat.Client;
 import database.DatabaseUtil;
 
 public class Player implements Runnable{
+		private long startTimer;
 		Game tempGameHolder;
-	 	private Socket socket;
 		private BufferedReader in;
 	    private PrintWriter out;
+	 	private Socket socket;
 	    private String ticket;
-	    static Player player;
 	    private String nickname;
+	    private String roundStatus;
+	     static Player player;
 		private int numberOfWins;
 		private int gamePoints;
 		private int guess;
 		private boolean ready;
-		private String roundStatus;
+		private boolean haveGuessed;
+		
 
 	    public Player(Socket socket) {
 	        this.socket = socket;
@@ -33,7 +36,6 @@ public class Player implements Runnable{
 	            out = new PrintWriter(socket.getOutputStream(), true);
 //	            ticket = Server.generateTicket();
 	            out.println("Identify Yourself: ");
-	            setRoundStatus("lose");
 	        } catch (IOException e) {
 	            e.printStackTrace();
 	        }
@@ -105,7 +107,12 @@ public class Player implements Runnable{
 		public void setRoundStatus(String roundStatus) {
 			this.roundStatus = roundStatus;
 		}
-		
+		public long getStartTimer() {
+			return startTimer;
+		}
+		public void setStartTimer(long startTimer) {
+			this.startTimer = startTimer;
+		}
 		@Override
 		public String toString() {
 			return "Player [ticket=" + ticket + ", nickname=" + nickname + "]";
@@ -117,13 +124,30 @@ public class Player implements Runnable{
 	            String inputLine;
 	            while ((inputLine = in.readLine()) != null) {
 	                // Handle client messages
+	            	/////////////////////////////////timer///////////////////////////////////////
+//	            	if(out.toString().split(" ")[2].equals("Guess")) {
+//	            		long guessTimer = System.currentTimeMillis()*1000;
+//	            		Thread guessTimeThread = new Thread(()->{
+//	            			while(true) {
+//	            				if((System.currentTimeMillis()-guessTimer)==10) {
+//	            					break;
+//	            				}
+//	            			}
+//	            		});
+//	            		guessTimeThread.start();
+//	            	}
+	            	/////////////////////////////////timer///////////////////////////////////////
+//	            	out.flush();
 	            	String [] clientMsgArr = inputLine.split(" ");
-	        		
 	        		switch(clientMsgArr[0].toLowerCase()) {
-	        			case "pseudo": parsePseudo(clientMsgArr);break;
-	        			case "join"  : parseJoin(clientMsgArr[1]);break;
-	        			case "ready" : parseReady();break;
-	        			case "guess" : parseGuess(clientMsgArr[1]);break;
+	        			case "pseudo": parsePseudo(clientMsgArr);
+	        			break;
+	        			case "join"  : parseJoin(clientMsgArr[1]);
+	        			break;
+	        			case "ready" : parseReady();
+	        			break;
+	        			case "guess" : parseGuess(clientMsgArr[1]);
+	        			break;
 //	        			case "chat"  : parseChat();break;
 	        			default: out.println("Command not recognized"); 
 	                }
@@ -156,15 +180,42 @@ public class Player implements Runnable{
 				if(game.getId()==(gameid)) { //matching the gameId
 					//System.out.println(game.hashCode());
 					tempGameHolder = game;
+					this.haveGuessed = false;
 					game.addPlayer(this);
 					this.setGamePoints(5);
 					out.println("This message is sent by game: " + 
 			    			game.getListofCurrentPlayers().stream().map(p-> p.getNickname()+" ")
 			    			.reduce("", (acc, curr)-> acc + curr));
 					
+					////////////////////starting game 60 seconds after 2 players joined/////////////////
+//					if(game.getListofCurrentPlayers().size()==2) {
+//						this.startTimer = System.currentTimeMillis()*1000;
+//						Thread timer = new Thread(()->{
+//							while(true) {
+//								if((System.currentTimeMillis()*1000)-startTimer==60) {
+//				        			break;
+//				        		}
+//							}
+//							if(tempGameHolder.getListofCurrentPlayers().size()!=0) {
+//								try {
+//			        				tempGameHolder.start();
+//								} catch (IOException | InterruptedException e) {
+//									// TODO Auto-generated catch block
+//									e.printStackTrace();
+//								}
+//							}
+//						});
+//						timer.start();
+//						try {
+//							timer.join();
+//						} catch (InterruptedException e) {
+//							 TODO Auto-generated catch block
+//							e.printStackTrace();
+//						}
+						/////////////////////////////////////////////////////////////////////
+//					}
 					/*this.getNickname() + " has joined the game "+ gameid*/
 					return; 
-
 					}
 				}
 			out.println("Game not found!"); // failed to find game in list of games returns null
@@ -172,7 +223,7 @@ public class Player implements Runnable{
 		}
 		
 //		//processes ready command
-		private void parseReady() throws IOException {
+		private void parseReady() throws IOException, InterruptedException {
 			this.ready=true;
 			int readyCounter=0;
 			for(Player player:tempGameHolder.getListofCurrentPlayers()) {
@@ -182,7 +233,7 @@ public class Player implements Runnable{
 			}
 			//
 			if(readyCounter==tempGameHolder.getListofCurrentPlayers().size()
-					&&tempGameHolder.getListofCurrentPlayers().size()>=1) {
+					&&tempGameHolder.getListofCurrentPlayers().size()>=2) {
 				tempGameHolder.start();
 			}			
 		}
@@ -192,6 +243,7 @@ public class Player implements Runnable{
 				if(player==this) {
 					int playerGuess = Integer.parseInt(guess);
 					player.setGuess(playerGuess);
+					player.haveGuessed=true;
 //					game.addGuess(playerGuess);
 				tempGameHolder.getAverage(playerGuess, player);
 //			System.out.println(tempGameHolder.listOfCurrentGuesses.get(0));
@@ -218,4 +270,10 @@ public class Player implements Runnable{
 				out.println("Join any game: ");
 				out.println("END_OF_TRANS");
 		 }
+		public boolean isHaveGuessed() {
+			return haveGuessed;
+		}
+		public void setHaveGuessed(boolean haveGuessed) {
+			this.haveGuessed = haveGuessed;
+		}
 }
