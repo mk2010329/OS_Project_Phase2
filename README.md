@@ -1,7 +1,7 @@
 # OS_Project_Phase2 Report
 ## Team
 - Basil Saeed bm2108258@student.qu.edu.qa
-- Fane Doe fd0000003@student.qu.edu.qa
+- Mohammad Hassam Tahir Khaili mk2010329@student.qu.edu.qa
 - Sane Doe sd0000002@student.qu.edu.qa
 - Zane Doe zd0000004@student.qu.edu.qa
 
@@ -20,4 +20,7 @@
 - coded and debugged the parse methods of the Player.java with teammate.
 ### Mahodi Hasan Sabab
 ### Mohammad Hassam Tahir Khaili:
+- created player, game, client, and player classes.
+- made communication between server and the client possible
+- initiaaly added game logic (all game rules and handling of messaages when the game starts) 
 ### Muhammad Khan:
