@@ -53,10 +53,10 @@ public class Game {
 	    }
 
 	    public synchronized void start() throws IOException {
-	    	
+	    	 roundNumber++;
 	    	 for (Player player : listofCurrentPlayers) {
 	             PrintWriter output = new PrintWriter(player.getSocket().getOutputStream(), true);
-	             output.println("GAME HAS STARTED. Guess a number between 0 and 100: ");
+	             output.println("Round "+roundNumber+ ". Guess a number between 0 and 100: ");
 	         }
 	    	
 	    	
@@ -64,11 +64,10 @@ public class Game {
 	    public synchronized void getAverage(int guess, Player player) throws IOException, ClassNotFoundException {
 	    	
 	    	 addGuess(guess);
-
 	         if (listOfCurrentGuesses.size() == listofCurrentPlayers.size()) {
-	        	 roundNumber++;
 	             calculateWinners();
-	             sendRoundResults();  
+	             sendRoundResults(); 
+	             listOfCurrentGuesses.clear();
 	         }
 		}
 	    
@@ -107,13 +106,16 @@ public class Game {
 			double average=  sum/listOfCurrentGuesses.size();
 			double target = (2.0 / 3.0) * average;
 	        double minDifference = Double.MAX_VALUE;
+	        
+	        for (Player player :listofCurrentPlayers) {
+	        	player.setReady(false);
+	        }
 	       
 	        //last player left logic
 	        if(listofCurrentPlayers.size()==1) {
 	        	DatabaseUtil.incrementPlayerNumberOfWins(listofCurrentPlayers.get(0).getTicket());
 	        	listofCurrentPlayers.clear();
 	        }
-	        System.out.println(listofCurrentPlayers);
 	      
 	      //last round Logic
 	        if(listofCurrentPlayers.size()==2) {

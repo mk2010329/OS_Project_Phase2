@@ -49,7 +49,7 @@ public class Client {
                 
 	            // Handle user input and interaction with server
 	            while (true) {
-	               System.out.println();
+	            	System.out.println();
 	                command = scanner.nextLine();
 	                out.println(command);
 

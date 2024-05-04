@@ -15,12 +15,10 @@ import database.DatabaseUtil;
 public class Player implements Runnable{
 		Game tempGameHolder;
 	 	private Socket socket;
-
 		private BufferedReader in;
 	    private PrintWriter out;
 	    private String ticket;
 	    static Player player;
-	    
 	    private String nickname;
 		private int numberOfWins;
 		private int gamePoints;
@@ -130,7 +128,7 @@ public class Player implements Runnable{
 	        			default: out.println("Command not recognized"); 
 	                }
 	            }
-	        } catch (IOException | ClassNotFoundException e) {
+	        } catch (IOException | ClassNotFoundException | InterruptedException e) {
 	            e.printStackTrace();
 	        } finally {
 	            Server.removePlayer(this);
@@ -145,7 +143,7 @@ public class Player implements Runnable{
 //		//processes pseudo command
 		private void parsePseudo(String [] clientMsgArr) throws ClassNotFoundException {
 			 player = DatabaseUtil.searchTicket(clientMsgArr[1]);
-			out.println("Welcome "+player.getNickname()+"\nYour ticket is "+player.getTicket());
+			out.println("Welcome "+this.getNickname()+"\nYour ticket is "+player.getTicket());
 			initialMessage();
 		}
 		
@@ -186,47 +184,27 @@ public class Player implements Runnable{
 			if(readyCounter==tempGameHolder.getListofCurrentPlayers().size()
 					&&tempGameHolder.getListofCurrentPlayers().size()>=1) {
 				tempGameHolder.start();
-			}
-
-//			if(game.getId()==(gameid)) { //matching the gameId
-//				game.addPlayer(this);
-//				out.println("This message is sent by game: " + 
-//		    			game.getListofCurrentPlayers().stream().map(p-> p.getNickname()+" ")
-//		    			.reduce("", (acc, curr)-> acc + curr));
-//				/*this.getNickname() + " has joined the game "+ gameid*/
-//				game.start();
-//				return ; 
-//				}
-//			
-//			}
-			
-			
+			}			
 		}
-//		
-//	
-		private void parseGuess(String guess) throws IOException, ClassNotFoundException {
+		
+		private void parseGuess(String guess) throws IOException, ClassNotFoundException, InterruptedException {
+			Game game = tempGameHolder;
 			for(Player player : tempGameHolder.getListofCurrentPlayers()) {
 				if(player==this) {
 					int playerGuess = Integer.parseInt(guess);
 					player.setGuess(playerGuess);
-					tempGameHolder.getAverage(playerGuess, player);
+//					game.addGuess(playerGuess);
+				tempGameHolder.getAverage(playerGuess, player);
 //			System.out.println(tempGameHolder.listOfCurrentGuesses.get(0));
 				}
-			}
+			}	
 		}
+		
 //
 		private static void parseChat(String msg) throws UnknownHostException, IOException {
 			String message = " says: "+msg;
 			Dummy2.Server.broadcast(message);
 		}
-//		
-//		public static String getLeaderBoard() throws ClassNotFoundException {
-//			ArrayList<Dummy2.Player> leaderboardArr = DatabaseUtil.getTopFivePlayers();
-//			String leaderboardString = leaderboardArr.stream()
-//					.map(p -> p.printPlayer() + "\n")
-//						.reduce("", (acc, curr) -> acc + curr);
-//			return leaderboardString;
-//		}
 		
 		 public void sendMessage(String message) {
 		        out.println(message);
