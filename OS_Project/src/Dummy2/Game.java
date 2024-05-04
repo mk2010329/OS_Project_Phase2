@@ -16,6 +16,8 @@ public class Game {
 	 private static int idCounter = 1;
 	    private int id;
 	    private List<Player> listofCurrentPlayers;
+	    private List<Player> roundLosers;
+	    private List<Player> players;
 	    private List<Player> winners;
 	    private List<Player> listOfDeadPlayers;
 	    private int roundNumber;
@@ -25,6 +27,7 @@ public class Game {
 	        id = idCounter++;
 			listofCurrentPlayers = new ArrayList<>();
 			listOfCurrentGuesses = new ArrayList<>();
+			roundLosers = new ArrayList<>();
 			winners = new ArrayList<>();
 		    listOfDeadPlayers = new ArrayList<>();
 	        roundNumber = 0;
@@ -51,10 +54,11 @@ public class Game {
 	    public synchronized void addGuess(int guess) {
 	        listOfCurrentGuesses.add(guess);
 	    }
-
+	    
 	    public synchronized void start() throws IOException {
 	    	 roundNumber++;
-	    	 for (Player player : listofCurrentPlayers) {
+	    	 players = new ArrayList<>(this.listofCurrentPlayers);
+	    	 for (Player player :players) {
 	             PrintWriter output = new PrintWriter(player.getSocket().getOutputStream(), true);
 	             output.println("Round "+roundNumber+ ". Guess a number between 0 and 100: ");
 	         }
@@ -64,9 +68,9 @@ public class Game {
 	    public synchronized void getAverage(int guess, Player player) throws IOException, ClassNotFoundException {
 	    	
 	    	 addGuess(guess);
-	         if (listOfCurrentGuesses.size() == listofCurrentPlayers.size()) {
+	         if (listOfCurrentGuesses.size() == players.size()) {
 	             calculateWinners();
-	             sendRoundResults(); 
+	             sendRoundResults();
 	             listOfCurrentGuesses.clear();
 	         }
 		}
@@ -112,52 +116,53 @@ public class Game {
 	        }
 	       
 	        //last player left logic
-	        if(listofCurrentPlayers.size()==1) {
-	        	DatabaseUtil.incrementPlayerNumberOfWins(listofCurrentPlayers.get(0).getTicket());
+	        if(players.size()==1) {
+	        	DatabaseUtil.incrementPlayerNumberOfWins(players.get(0).getTicket());
 	        	listofCurrentPlayers.clear();
+	        	players.clear();
 	        }
-	      
+	        
 	      //last round Logic
-	        if(listofCurrentPlayers.size()==2) {
-	        	  for (Iterator<Player> iterator = listofCurrentPlayers.iterator(); iterator.hasNext();) {
+	        if(players.size()==2) {
+	        	  for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 	                  Player player = iterator.next();
 	                  if (player.getGuess() == 0) {
 	                	  player.setRoundStatus("lose");
 	                      iterator.remove();
 	                      listOfDeadPlayers.add(player);
-	                      winners.add(listofCurrentPlayers.get(0));
+	                      winners.add(players.get(0));
 	                      return;
 	        		}
 	        	}
 	        }
 	        
 	        //game logic
-	        for (Player player : new ArrayList<>(listofCurrentPlayers)) {
+	        for (Player player : players) {
 	            if(player.getGuess()>=0 && player.getGuess()<=100) {
 	            	double difference = Math.abs(target - player.getGuess());
 	                if (difference < minDifference) {
 	                    minDifference = difference;
 	                    winners.clear();
 	                    winners.add(player);
-	                    listofCurrentPlayers.remove(player);
+	                    players.remove(player);
 	                } else if (difference == minDifference) {
 	                    winners.add(player);
-	                    listofCurrentPlayers.remove(player);
+	                    players.remove(player);
 	                }
 	            }
 	        }
 	        
-	        decrementPoint(listofCurrentPlayers);
-	        for (Player player : listofCurrentPlayers) {
+	        decrementPoint(players);
+	        for (Player player : players) {
 	            if(player.getGamePoints()==0) {
-	            	listofCurrentPlayers.remove(player);
+	            	players.remove(player);
 	            	listOfDeadPlayers.add(player);
 	            }
 	        }
 	        
 	        for (Player p : winners) {
 	        	p.setRoundStatus("win");
-	        	listofCurrentPlayers.add(p);
+	        	players.add(p);
 	        }
 	        
 	    }
@@ -188,6 +193,22 @@ public class Game {
 
 		public void setId(int id) {
 			this.id = id;
+		}
+
+		public List<Player> getPlayers() {
+			return players;
+		}
+
+		public void setPlayers(List<Player> players) {
+			this.players = players;
+		}
+
+		public List<Player> getRoundLosers() {
+			return roundLosers;
+		}
+
+		public void setRoundLosers(List<Player> roundLosers) {
+			this.roundLosers = roundLosers;
 		}
 
 			

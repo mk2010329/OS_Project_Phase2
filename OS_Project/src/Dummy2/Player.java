@@ -131,7 +131,7 @@ public class Player implements Runnable{
 	        } catch (IOException | ClassNotFoundException | InterruptedException e) {
 	            e.printStackTrace();
 	        } finally {
-	            Server.removePlayer(this);
+//	            Server.removePlayer(this);
 	            try {
 	                socket.close();
 	            } catch (IOException e) {
@@ -188,7 +188,6 @@ public class Player implements Runnable{
 		}
 		
 		private void parseGuess(String guess) throws IOException, ClassNotFoundException, InterruptedException {
-			Game game = tempGameHolder;
 			for(Player player : tempGameHolder.getListofCurrentPlayers()) {
 				if(player==this) {
 					int playerGuess = Integer.parseInt(guess);
