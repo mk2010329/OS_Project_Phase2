@@ -63,6 +63,7 @@ public class Game {
 	    	 for (Player player :players) {
 	             PrintWriter output = new PrintWriter(player.getSocket().getOutputStream(), true);
 	             output.println("Round "+roundNumber+". Guess a number between 0 and 100: ");
+	             
 	         }
 	    	
 	    	
@@ -146,6 +147,7 @@ public class Game {
 	                    players.remove(player);
 	                }
 	            }
+	            
 	        }
 	        
 	        decrementPoint(players);
