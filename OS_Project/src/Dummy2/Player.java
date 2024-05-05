@@ -124,20 +124,6 @@ public class Player implements Runnable{
 	            String inputLine;
 	            while ((inputLine = in.readLine()) != null) {
 	                // Handle client messages
-	            	/////////////////////////////////timer///////////////////////////////////////
-//	            	if(out.toString().split(" ")[2].equals("Guess")) {
-//	            		long guessTimer = System.currentTimeMillis()*1000;
-//	            		Thread guessTimeThread = new Thread(()->{
-//	            			while(true) {
-//	            				if((System.currentTimeMillis()-guessTimer)==10) {
-//	            					break;
-//	            				}
-//	            			}
-//	            		});
-//	            		guessTimeThread.start();
-//	            	}
-	            	/////////////////////////////////timer///////////////////////////////////////
-//	            	out.flush();
 	            	String [] clientMsgArr = inputLine.split(" ");
 	        		switch(clientMsgArr[0].toLowerCase()) {
 	        			case "pseudo": parsePseudo(clientMsgArr);
