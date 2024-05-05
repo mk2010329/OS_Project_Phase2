@@ -95,7 +95,7 @@ public class DatabaseUtil {
 		DatabaseUtil.insertPlayer(queryTicket);
 		
 		try (Statement statement = DatabaseUtil.makeConnection().createStatement()) {
-			sql = "SELECT * FROM players WHERE nickname LIKE " + "'"+queryTicket+"'";
+			sql = "SELECT * FROM players ORDER BY ticket_temp DESC LIMIT 1;";
 			ResultSet resultSet = statement.executeQuery(sql);
 			while (resultSet.next()) {
 				int ticket_temp = resultSet.getInt(1);
