@@ -168,6 +168,7 @@ public class Player implements Runnable{
 					
 					this.haveGuessed = false;
 					game.addPlayer(this);
+					
 					this.setGamePoints(5);
 					out.println("This message is sent by game: " + 
 			    			game.getListofCurrentPlayers().stream().map(p-> p.getNickname()+" ")

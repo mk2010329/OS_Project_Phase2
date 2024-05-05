@@ -17,6 +17,7 @@ public class Client {
 	            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 
 
+	            
 	            // Get ticket from server
 	            String from_Server = in.readLine();
 	            System.out.println(from_Server);

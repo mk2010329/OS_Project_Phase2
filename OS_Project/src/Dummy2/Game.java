@@ -157,7 +157,14 @@ public class Game {
 		            break;
 		        }
 	        }
-	        
+	        //cheating logic
+	        if(players.size()==0) {
+	        	for(Player winner:winners) {
+	        		winner.setRoundStatus("lose");;
+	        		players.add(winner);
+	        	}
+	        	winners.clear();
+	        }
 	        decrementPoint(players);
 	        if(players.size()!=1) {
 	        	for(Player plr:listofCurrentPlayers) {
@@ -194,10 +201,11 @@ public class Game {
 	        		output.println("Game Ended, Winner is :"+players.get(0).getNickname()+" Pick a game: "+Server.getGames());
 	        	}
 	        	players.clear();
+	        	winners.clear();
 //	        	sem.release();
 	        	return;
 	        }
-	        
+	        winners.clear();
 	        sendRoundResults();
 	    }
 	    
