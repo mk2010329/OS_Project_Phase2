@@ -7,7 +7,7 @@ import java.util.*;
 public class Client {
 
 	
-	 private static final String SERVER_ADDRESS = "localhost";
+	 private static final String SERVER_ADDRESS = "localhost"; //10.20.42.24
 	    private static final int SERVER_PORT = 13337;
 	    private static final Scanner scanner = new Scanner(System.in);
 
