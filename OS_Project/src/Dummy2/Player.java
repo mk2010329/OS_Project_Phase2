@@ -134,7 +134,7 @@ public class Player implements Runnable{
 	        			break;
 	        			case "guess" : parseGuess(clientMsgArr[1]);
 	        			break;
-//	        			case "chat"  : parseChat();break;
+	        			case "chat"  : parseChat(clientMsgArr);break;
 	        			default: out.println("Command not recognized"); 
 	                }
 	            }
@@ -169,7 +169,7 @@ public class Player implements Runnable{
 					this.haveGuessed = false;
 					game.addPlayer(this);
 					this.setGamePoints(5);
-					out.println("This message is sent by game: " + 
+					out.println("Players in the game: " + 
 			    			game.getListofCurrentPlayers().stream().map(p-> p.getNickname()+" ")
 			    			.reduce("", (acc, curr)-> acc + curr));
 					tempGameHolder = game;
@@ -238,8 +238,12 @@ public class Player implements Runnable{
 		}
 		
 //
-		private static void parseChat(String msg) throws UnknownHostException, IOException {
-			String message = " says: "+msg;
+		private static void parseChat(String [] msg) throws UnknownHostException, IOException {
+			String message = player.getNickname() + ": ";
+			for (int i=1; i<msg.length;i++) {
+			message += msg[i]+ " ";
+			}
+			
 			Dummy2.Server.broadcast(message);
 		}
 		

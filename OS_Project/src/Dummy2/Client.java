@@ -27,14 +27,7 @@ public class Client {
 //                
                String response;
 //                for (int i=0 ; i<14;i++) {
-//					 response = in.readLine();
-//					if(response!=null) {
-//						System.out.println(response);
-//					}
-//					else {
-//						break;
-//					}	
-//				}
+
                 
                 while (true) {
                 	response = in.readLine();
