@@ -57,7 +57,7 @@ public class Game {
 	    }
 	    
 	    public synchronized void start() throws IOException, InterruptedException {
-	    	sem.acquire();
+//	    	sem.acquire();
 	    	 roundNumber++;
 	    	 players = new ArrayList<>(this.listofCurrentPlayers);
 	    	 for (Player player :players) {
@@ -72,7 +72,6 @@ public class Game {
 	    	 addGuess(guess);
 	         if (listOfCurrentGuesses.size() == players.size()) {
 	             calculateWinners();
-	             
 	             listOfCurrentGuesses.clear();
 	         }
 		}
@@ -101,7 +100,7 @@ public class Game {
 	        //sending the output to all players in the game
 	        for (Player player : listofCurrentPlayers) {
 	            PrintWriter output = new PrintWriter(player.getSocket().getOutputStream(), true);
-	            output.println(roundResults);
+	            output.println(roundResults+", Enter Ready to start the next round: ");
 	        }
 	        
 	    }
@@ -161,39 +160,44 @@ public class Game {
 	        
 	        decrementPoint(players);
 	        if(players.size()!=1) {
-	        	for (Player player : players) {
-		            if(player.getGamePoints()==0) {
-		            	listOfDeadPlayers.add(player);
-		            	players.remove(player);
-		            }
-		        }
+	        	for(Player plr:listofCurrentPlayers) {
+	        		for (Player player : players) {
+			            if(player.getTicket().equals(plr.getTicket())) {
+			            	if(player.getGamePoints()==0) {
+				            	listOfDeadPlayers.add(player);
+				            	players.remove(player);
+				            }
+			            	break;
+			            }
+			        }
+	        	}
 	        }
 	        else if(players.size()==1) {
 	        	if(players.get(0).getGamePoints()==0) {
 	        		listOfDeadPlayers.add(players.get(0));
 	        		players.clear();
-	        		for(Player winner:winners) {
-	        			listofCurrentPlayers.get(listofCurrentPlayers.indexOf(winner)).setRoundStatus("win");
-                    	players.add(winner);
-                    }
 	        	}
 	        }
-	        
+	        //adding the winners back
+	        for(Player winner:winners) {
+    			listofCurrentPlayers.get(listofCurrentPlayers.indexOf(winner)).setRoundStatus("win");
+            	players.add(winner);
+            }
 	        
 	        //last player left logic
 	        if(players.size()==1) {
 	        	DatabaseUtil.incrementPlayerNumberOfWins(players.get(0).getTicket());
 //	        	listofCurrentPlayers.clear();
-	        	
 	        	PrintWriter output;
 	        	for(Player plr:listofCurrentPlayers) {
 	        		output = new PrintWriter(plr.getSocket().getOutputStream(),true);
-	        		output.println("Game Ened, Winner is :"+players.get(0).getNickname()+" Pick a game: "+Server.getGames());
+	        		output.println("Game Ended, Winner is :"+players.get(0).getNickname()+" Pick a game: "+Server.getGames());
 	        	}
 	        	players.clear();
-	        	sem.release();
+//	        	sem.release();
 	        	return;
 	        }
+	        
 	        sendRoundResults();
 	    }
 	    
