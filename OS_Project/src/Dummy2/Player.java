@@ -194,23 +194,23 @@ public class Player implements Runnable{
 			    			game.getListofCurrentPlayers().stream().map(p-> p.getNickname()+" ")
 			    			.reduce("", (acc, curr)-> acc + curr));
 					///////////////////timer////////////////////////////////
-					if(game.getListofCurrentPlayers().size()==2) {
-						Timer timer = new Timer();
-			            TimerTask task = new TimerTask() {
-			           	 public void run() {
-			           		 try {
-								game.start();
-							} catch (IOException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-			           	 }
-			            };
-			            timer.schedule(task, 60000);
-					}
+//					if(game.getListofCurrentPlayers().size()==2) {
+//						Timer timer = new Timer();
+//			            TimerTask task = new TimerTask() {
+//			           	 public void run() {
+//			           		 try {
+//								game.start();
+//							} catch (IOException e) {
+//								// TODO Auto-generated catch block
+//								e.printStackTrace();
+//							} catch (InterruptedException e) {
+//								// TODO Auto-generated catch block
+//								e.printStackTrace();
+//							}
+//			           	 }
+//			            };
+//			            timer.schedule(task, 60000);
+//					}
 					///////////////////timer////////////////////////////////
 					/*this.getNickname() + " has joined the game "+ gameid*/
 					return; 
