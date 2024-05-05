@@ -72,7 +72,7 @@ public class Game {
 	    	 addGuess(guess);
 	         if (listOfCurrentGuesses.size() == players.size()) {
 	             calculateWinners();
-	             sendRoundResults();
+	             
 	             listOfCurrentGuesses.clear();
 	         }
 		}
@@ -184,17 +184,24 @@ public class Game {
 	        if(players.size()==1) {
 	        	DatabaseUtil.incrementPlayerNumberOfWins(players.get(0).getTicket());
 //	        	listofCurrentPlayers.clear();
+	        	
+	        	PrintWriter output;
+	        	for(Player plr:listofCurrentPlayers) {
+	        		output = new PrintWriter(plr.getSocket().getOutputStream(),true);
+	        		output.println("Game Ened, Winner is :"+players.get(0).getNickname()+" Pick a game: "+Server.getGames());
+	        	}
 	        	players.clear();
 	        	sem.release();
 	        	return;
 	        }
+	        sendRoundResults();
 	    }
 	    
       //decrements player points
     	public void decrementPoint(List<Player> player) {
     		for(Player p : player) {
     			p.setGamePoints(p.getGamePoints()-1);
-    			p.setRoundStatus("lose");
+//    			p.setRoundStatus("lose");
     		}
     	}
     	
