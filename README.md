@@ -19,6 +19,12 @@
 - coded all of the database persistence of the player, its ticket and numberOfWins using JDBC for SQLite.
 - coded and debugged the parse methods of the Player.java with teammate.
 ### Mahodi Hasan Sabab
+Game Class: Game Class logic Implementations and major and minor issues debugging.
+•	Multi-round Logic implementation and troubleshooting
+•	Game Rules and Troubleshooting
+Player Class: Fixed Errors and planned and implemented the logic for player to work with game.
+Overall Project Management.
+
 ### Mohammad Hassam Tahir Khaili:
 - created player, game, client, and player classes.
 - made communication between server and the client possible
