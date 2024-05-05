@@ -4,7 +4,6 @@ package Dummy2;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
-import java.util.concurrent.Semaphore;
 import java.util.stream.Collectors;
 
 import database.DatabaseUtil;
@@ -13,7 +12,6 @@ import database.DatabaseUtil;
 public class Game {
 	
 	 private static int idCounter = 1;
-	 	private Semaphore sem;
 	    private int id;
 	    private List<Player> listofCurrentPlayers;
 	    private List<Player> roundLosers;
@@ -24,7 +22,6 @@ public class Game {
 	    public  List<Integer> listOfCurrentGuesses ;
 
 	    public Game() {
-	    	sem = new Semaphore(1);
 	        id = idCounter++;
 			listofCurrentPlayers = new ArrayList<>();
 			listOfCurrentGuesses = new ArrayList<>();
@@ -57,7 +54,6 @@ public class Game {
 	    }
 	    
 	    public synchronized void start() throws IOException, InterruptedException {
-	    	sem.acquire();
 	    	 roundNumber++;
 	    	 players = new ArrayList<>(this.listofCurrentPlayers);
 	    	 for (Player player :players) {
@@ -108,30 +104,56 @@ public class Game {
 	    }
 		
 	    public void calculateWinners() throws IOException, ClassNotFoundException {
-	    	
+	    	//calculation variable
 	    	double sum = listOfCurrentGuesses.stream().reduce(0, (acc, curr) -> acc + curr);
 			double average=  sum/listOfCurrentGuesses.size();
 			double target = (2.0 / 3.0) * average;
-	        double minDifference = Double.MAX_VALUE;
-	        
+//	        double minDifference = Double.MAX_VALUE;
+			double minDifference = 100000000; //unreachable value
+	        // round starter code
 	        for (Player player :players) {
 	        	player.setRoundStatus("lose");
 	        	player.setReady(false);
 	        }
-	       
-	      //last round Logic
+	        //new logic 
+	        if(players.size()>2) {// players are more than 2
+	        	//game logic
+		        for (Player player : players) { //iterate players
+		            if(player.getGuess()>=0 && player.getGuess()<=100) { //if player's guess is between 0 and 100
+		            	double difference = Math.abs(target - player.getGuess()); //check the difference between target and player guess 
+		                if (difference < minDifference) { //compares the difference
+		                    minDifference = difference; //sets the minDifference to players difference if its lesser
+		                    winners.clear(); // clears the winners list
+		                    winners.add(player); // adds the player to winners list
+		                    players.remove(player); // removes player from list
+		                } else if (difference == minDifference) { //if player diff is same as the prev player diff
+		                    winners.add(player); //append new player
+		                    players.remove(player); // remove new player from list
+		                }
+		            }
+		            
+		        }
+	        }
+	        //last round Logic start/////////////////////////////
 	        if(players.size()==2) {
-	        	  for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
+	        	  for (Iterator<Player> iterator = listofCurrentPlayers.iterator(); iterator.hasNext();) {
 	                  Player player = iterator.next();
-	                  if (player.getGuess() == 0) {
-	                	  player.setRoundStatus("lose");
-	                      iterator.remove();
-	                      listOfDeadPlayers.add(player);
-	                      winners.add(players.get(0));
-	                      return;
-	        		}
+	                  for (Iterator<Player> iterator2 = players.iterator(); iterator.hasNext();) {
+		                  Player player2 = iterator2.next();
+		                  if(player==player2) {
+		                	  if (player.getGuess() == 0) {
+			                	  player.setRoundStatus("lose");
+			                      iterator2.remove();
+			                      listOfDeadPlayers.add(player);
+			                      winners.add(players.get(0));
+			                      return;
+			        		}
+		                  }
+		                  }
+	                 
 	        	}
 	        }
+	      //last round Logic end//////////////////////////////
 	        
 	        //game logic
 	        for (Player player : players) {
@@ -151,7 +173,17 @@ public class Game {
 	        }
 	        
 	        decrementPoint(players);
-	        if(players.size()!=1) {
+	        for(Player winner:winners) { // adding winners back
+	        	for(Player plr:listofCurrentPlayers) {
+	        		if(winner.getTicket().equals(plr.getTicket())) {
+	        			plr.setRoundStatus("win");
+	        			break;
+	        		}
+	        	}
+	        	players.add(winner);
+	        }
+	        
+	        if(players.size()!=1) { //removing dead players
 	        	for (Player player : players) {
 		            if(player.getGamePoints()==0) {
 		            	listOfDeadPlayers.add(player);
@@ -160,27 +192,32 @@ public class Game {
 		        }
 	        }
 	        else {
-	        	if(players.get(0).getGamePoints()==0) {
+	        	if(players.get(0).getGamePoints()==0) { //check last player points
 	        		listOfDeadPlayers.add(players.get(0));
+	        		for (Player p : winners) {
+	        			for(Player plr:listofCurrentPlayers) {
+	    	        		if(p.getTicket().equals(plr.getTicket())) {
+	    	        			if(players.size()==1) {
+	    	    	        		players.clear();
+	    	    	        	}
+	    	    	        	p.setRoundStatus("win");
+	    	    	        	players.add(p);
+	    	    	        	break;
+	    	        		}
+	    	        	}
+	    	        }
+	    	        
+	    	        //last player left logic
+	    	        if(players.size()==1) {
+	    	        	DatabaseUtil.incrementPlayerNumberOfWins(players.get(0).getTicket());
+//	    	        	listofCurrentPlayers.clear();
+	    	        	players.clear();
+	    	        	return;
+	    	        }
 	        	}
 	        }
 	        
-	        for (Player p : winners) {
-	        	if(players.size()==1) {
-	        		players.clear();
-	        	}
-	        	p.setRoundStatus("win");
-	        	players.add(p);
-	        }
 	        
-	        //last player left logic
-	        if(players.size()==1) {
-	        	DatabaseUtil.incrementPlayerNumberOfWins(players.get(0).getTicket());
-//	        	listofCurrentPlayers.clear();
-	        	players.clear();
-	        	sem.release();
-	        	return;
-	        }
 	        
 	    }
 	    

@@ -124,7 +124,7 @@ public class Player implements Runnable{
 	        try {
 	        	this.haveGuessed=false;
 	            String inputLine;
-	            while ((inputLine = in.readLine()) != null) {
+	            while ((inputLine = in.readLine()) != "exit") {
 	                // Handle client messages
 	            	/////////////////////////////////timer///////////////////////////////////////
 //	            	if(out.toString().split(" ")[2].equals("Guess")) {
@@ -174,7 +174,7 @@ public class Player implements Runnable{
 //		//processes pseudo command
 		private void parsePseudo(String [] clientMsgArr) throws ClassNotFoundException {
 			 player = DatabaseUtil.searchTicket(clientMsgArr[1]);
-			out.println("Welcome "+this.getNickname()+"\nYour ticket is "+player.getTicket());
+			out.println("Welcome "+this.getNickname()+"\nYour ticket is "+this.getTicket());
 			initialMessage();
 		}
 		
@@ -189,7 +189,7 @@ public class Player implements Runnable{
 					tempGameHolder = game;
 					this.haveGuessed = false;
 					game.addPlayer(this);
-					this.setGamePoints(5);
+					this.setGamePoints(2);
 					out.println("This message is sent by game: " + 
 			    			game.getListofCurrentPlayers().stream().map(p-> p.getNickname()+" ")
 			    			.reduce("", (acc, curr)-> acc + curr));
