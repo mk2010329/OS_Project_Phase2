@@ -57,13 +57,12 @@ public class Game {
 	    }
 	    
 	    public synchronized void start() throws IOException, InterruptedException {
-	    	sem.acquire();
+//	    	sem.acquire();
 	    	 roundNumber++;
 	    	 players = new ArrayList<>(this.listofCurrentPlayers);
 	    	 for (Player player :players) {
 	             PrintWriter output = new PrintWriter(player.getSocket().getOutputStream(), true);
 	             output.println("Round "+roundNumber+". Guess a number between 0 and 100: ");
-	             
 	         }
 	    	
 	    	
@@ -73,7 +72,6 @@ public class Game {
 	    	 addGuess(guess);
 	         if (listOfCurrentGuesses.size() == players.size()) {
 	             calculateWinners();
-	             sendRoundResults();
 	             listOfCurrentGuesses.clear();
 	         }
 		}
@@ -102,7 +100,7 @@ public class Game {
 	        //sending the output to all players in the game
 	        for (Player player : listofCurrentPlayers) {
 	            PrintWriter output = new PrintWriter(player.getSocket().getOutputStream(), true);
-	            output.println(roundResults);
+	            output.println(roundResults+", Enter Ready to start the next round: ");
 	        }
 	        
 	    }
@@ -134,61 +132,80 @@ public class Game {
 	        }
 	        
 	        //game logic
-	        for (Player player : players) {
-	            if(player.getGuess()>=0 && player.getGuess()<=100) {
-	            	double difference = Math.abs(target - player.getGuess());
-	                if (difference < minDifference) {
-	                    minDifference = difference;
-	                    winners.clear();
-	                    winners.add(player);
-	                    players.remove(player);
-	                } else if (difference == minDifference) {
-	                    winners.add(player);
-	                    players.remove(player);
-	                }
-	            }
-	            
+	        for(Player plr:listofCurrentPlayers) {
+	        	for (Player player : players) {
+		            if(player.getTicket().equals(plr.getTicket())) {
+		            	if(player.getGuess()>=0 && player.getGuess()<=100) {
+			            	double difference = Math.abs(target - player.getGuess());
+			                if (difference < minDifference) {
+			                    minDifference = difference;
+			                    for(Player winner:winners) {
+			                    	listofCurrentPlayers.get(listofCurrentPlayers.indexOf(winner)).setRoundStatus("lose");
+			                    	players.add(winner);
+			                    }
+			                    winners.clear();
+			                    listofCurrentPlayers.get(listofCurrentPlayers.indexOf(player)).setRoundStatus("win");
+			                    winners.add(player);
+			                    players.remove(player);
+			                } else if (difference == minDifference) {
+			                	listofCurrentPlayers.get(listofCurrentPlayers.indexOf(player)).setRoundStatus("win");
+			                    winners.add(player);
+			                    players.remove(player);
+			                }
+			            }
+		            }
+		            break;
+		        }
 	        }
 	        
 	        decrementPoint(players);
 	        if(players.size()!=1) {
-	        	for (Player player : players) {
-		            if(player.getGamePoints()==0) {
-		            	listOfDeadPlayers.add(player);
-		            	players.remove(player);
-		            }
-		        }
+	        	for(Player plr:listofCurrentPlayers) {
+	        		for (Player player : players) {
+			            if(player.getTicket().equals(plr.getTicket())) {
+			            	if(player.getGamePoints()==0) {
+				            	listOfDeadPlayers.add(player);
+				            	players.remove(player);
+				            }
+			            	break;
+			            }
+			        }
+	        	}
 	        }
-	        else {
+	        else if(players.size()==1) {
 	        	if(players.get(0).getGamePoints()==0) {
 	        		listOfDeadPlayers.add(players.get(0));
-	        	}
-	        }
-	        
-	        for (Player p : winners) {
-	        	if(players.size()==1) {
 	        		players.clear();
 	        	}
-	        	p.setRoundStatus("win");
-	        	players.add(p);
 	        }
+	        //adding the winners back
+	        for(Player winner:winners) {
+    			listofCurrentPlayers.get(listofCurrentPlayers.indexOf(winner)).setRoundStatus("win");
+            	players.add(winner);
+            }
 	        
 	        //last player left logic
 	        if(players.size()==1) {
 	        	DatabaseUtil.incrementPlayerNumberOfWins(players.get(0).getTicket());
 //	        	listofCurrentPlayers.clear();
+	        	PrintWriter output;
+	        	for(Player plr:listofCurrentPlayers) {
+	        		output = new PrintWriter(plr.getSocket().getOutputStream(),true);
+	        		output.println("Game Ended, Winner is :"+players.get(0).getNickname()+" Pick a game: "+Server.getGames());
+	        	}
 	        	players.clear();
-	        	sem.release();
+//	        	sem.release();
 	        	return;
 	        }
 	        
+	        sendRoundResults();
 	    }
 	    
       //decrements player points
     	public void decrementPoint(List<Player> player) {
     		for(Player p : player) {
     			p.setGamePoints(p.getGamePoints()-1);
-    			p.setRoundStatus("lose");
+//    			p.setRoundStatus("lose");
     		}
     	}
     	
