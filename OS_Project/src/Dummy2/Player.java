@@ -173,33 +173,19 @@ public class Player implements Runnable{
 			    			game.getListofCurrentPlayers().stream().map(p-> p.getNickname()+" ")
 			    			.reduce("", (acc, curr)-> acc + curr));
 					tempGameHolder = game;
-					////////////////////starting game 60 seconds after 2 players joined/////////////////
-//					if(game.getListofCurrentPlayers().size()==2) {
-//						this.startTimer = System.currentTimeMillis()*1000;
-//						Thread timer = new Thread(()->{
-//							while(true) {
-//								if((System.currentTimeMillis()*1000)-startTimer==60) {
-//				        			break;
-//				        		}
-//							}
-//							if(tempGameHolder.getListofCurrentPlayers().size()!=0) {
-//								try {
-//			        				tempGameHolder.start();
-//								} catch (IOException | InterruptedException e) {
-//									// TODO Auto-generated catch block
-//									e.printStackTrace();
-//								}
-//							}
-//						});
-//						timer.start();
-//						try {
-//							timer.join();
-//						} catch (InterruptedException e) {
-//							 TODO Auto-generated catch block
-//							e.printStackTrace();
-//						}
-						/////////////////////////////////////////////////////////////////////
-//					}
+					// checking if game room is full using semaphore
+					boolean permitted = game.tryJoinGame();
+					if (permitted) {
+						game.addPlayer(this);
+						this.setGamePoints(5);
+						this.out.println("This message is sent by game: " + 
+				    			game.getListofCurrentPlayers().stream().map(p-> p.getNickname()+" ")
+				    			.reduce("", (acc, curr)-> acc + curr));
+					} else {
+						this.out.println("Sorry, game is full. Pick another game:");
+						// send to home screen
+					}
+					
 					/*this.getNickname() + " has joined the game "+ gameid*/
 					return; 
 					}

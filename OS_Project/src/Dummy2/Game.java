@@ -22,9 +22,12 @@ public class Game {
 	    private List<Player> listOfDeadPlayers;
 	    private int roundNumber;
 	    public  List<Integer> listOfCurrentGuesses ;
+	    
+	    private static final int MAX_PLAYERS = 6;
+	    private Semaphore semaphore;
 
 	    public Game() {
-	    	sem = new Semaphore(1);
+//	    	sem = new Semaphore(1);
 	        id = idCounter++;
 			listofCurrentPlayers = new ArrayList<>();
 			listOfCurrentGuesses = new ArrayList<>();
@@ -32,6 +35,16 @@ public class Game {
 			winners = new ArrayList<>();
 		    listOfDeadPlayers = new ArrayList<>();
 	        roundNumber = 0;
+	        
+	        semaphore = new Semaphore(MAX_PLAYERS);
+	    }
+	    
+	    public boolean tryJoinGame() {
+	    	return this.semaphore.tryAcquire();
+	    }
+	    
+	    public void leaveGame() {
+	    	this.semaphore.release();
 	    }
 
 	    public int getId() {
